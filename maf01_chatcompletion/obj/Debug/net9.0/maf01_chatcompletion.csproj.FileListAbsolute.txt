@@ -17,7 +17,6 @@ E:\Users\mauromi\source\git_repos\maf\maf01_chatcompletion\bin\Debug\net9.0\Open
 E:\Users\mauromi\source\git_repos\maf\maf01_chatcompletion\bin\Debug\net9.0\OpenTelemetry.Api.dll
 E:\Users\mauromi\source\git_repos\maf\maf01_chatcompletion\bin\Debug\net9.0\System.ClientModel.dll
 E:\Users\mauromi\source\git_repos\maf\maf01_chatcompletion\bin\Debug\net9.0\System.Memory.Data.dll
-E:\Users\mauromi\source\git_repos\maf\maf01_chatcompletion\bin\Debug\net9.0\System.Numerics.Tensors.dll
 E:\Users\mauromi\source\git_repos\maf\maf01_chatcompletion\obj\Debug\net9.0\maf01_chatcompletion.csproj.AssemblyReference.cache
 E:\Users\mauromi\source\git_repos\maf\maf01_chatcompletion\obj\Debug\net9.0\maf01_chatcompletion.GeneratedMSBuildEditorConfig.editorconfig
 E:\Users\mauromi\source\git_repos\maf\maf01_chatcompletion\obj\Debug\net9.0\maf01_chatcompletion.AssemblyInfoInputs.cache
@@ -30,3 +29,4 @@ E:\Users\mauromi\source\git_repos\maf\maf01_chatcompletion\obj\Debug\net9.0\refi
 E:\Users\mauromi\source\git_repos\maf\maf01_chatcompletion\obj\Debug\net9.0\maf01_chatcompletion.pdb
 E:\Users\mauromi\source\git_repos\maf\maf01_chatcompletion\obj\Debug\net9.0\maf01_chatcompletion.genruntimeconfig.cache
 E:\Users\mauromi\source\git_repos\maf\maf01_chatcompletion\obj\Debug\net9.0\ref\maf01_chatcompletion.dll
+E:\Users\mauromi\source\git_repos\maf\maf01_chatcompletion\bin\Debug\net9.0\System.Numerics.Tensors.dll

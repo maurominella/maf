@@ -50,10 +50,6 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
-            "Azure.AI.Agents.Persistent": {
-              "target": "Package",
-              "version": "[1.2.0-beta.6, )"
-            },
             "Azure.Identity": {
               "target": "Package",
               "version": "[1.17.0, )"

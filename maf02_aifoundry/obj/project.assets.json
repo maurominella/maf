@@ -929,7 +929,6 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "Azure.AI.Agents.Persistent >= 1.2.0-beta.6",
       "Azure.Identity >= 1.17.0",
       "Microsoft.Agents.AI >= 1.0.0-preview.251016.1",
       "Microsoft.Agents.AI.AzureAI >= 1.0.0-preview.251016.1"
@@ -985,10 +984,6 @@
       "net9.0": {
         "targetAlias": "net9.0",
         "dependencies": {
-          "Azure.AI.Agents.Persistent": {
-            "target": "Package",
-            "version": "[1.2.0-beta.6, )"
-          },
           "Azure.Identity": {
             "target": "Package",
             "version": "[1.17.0, )"

@@ -8,7 +8,6 @@
     ".NETCoreApp,Version=v9.0": {
       "maf02_aifoundry/1.0.0": {
         "dependencies": {
-          "Azure.AI.Agents.Persistent": "1.2.0-beta.6",
           "Azure.Identity": "1.17.0",
           "Microsoft.Agents.AI": "1.0.0-preview.251016.1",
           "Microsoft.Agents.AI.AzureAI": "1.0.0-preview.251016.1"

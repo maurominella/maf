@@ -11,14 +11,29 @@ var persistentAgentsClient = new Azure.AI.Agents.Persistent.PersistentAgentsClie
     clientEndpoint,
     new Azure.Identity.AzureCliCredential());
 
+
+#region OPTION 1 TO USE SERVER SIDE PERSISTENT AGENTS
 // You can create a server side persistent agent with the Azure.AI.Agents.Persistent SDK.
 var agentMetadata = await persistentAgentsClient.Administration.CreateAgentAsync(
     model: deploymentName,
     name: JokerName,
     instructions: JokerInstructions);
 
-
 // You can retrieve an already created server side persistent agent as an AIAgent.
-AIAgent mafAgent = await persistentAgentsClient.GetAIAgentAsync(agentMetadata.Value.Id);
+AIAgent mafAgent1 = await persistentAgentsClient.GetAIAgentAsync(agentMetadata.Value.Id);
+#endregion
 
-Console.ReadLine();
+#region OPTION 2 TO USE SERVER SIDE PERSISTENT AGENTS
+AIAgent mafAgent2 = await persistentAgentsClient.CreateAIAgentAsync(
+    model: deploymentName,
+    name: JokerName,
+    instructions: JokerInstructions);
+#endregion
+
+// You can then invoke the agent like any other AIAgent.
+Microsoft.Agents.AI.AgentThread thread = mafAgent1.GetNewThread();
+Console.WriteLine(await mafAgent1.RunAsync("Tell me a joke about a pirate.", thread));
+
+// Cleanup for sample purposes.
+await persistentAgentsClient.Administration.DeleteAgentAsync(mafAgent1.Id);
+await persistentAgentsClient.Administration.DeleteAgentAsync(mafAgent2.Id);

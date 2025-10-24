@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("maf02_aifoundry")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1cffd26462e540538ae7fd4395fb130f817f1315")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7527c25e3419b96c917768f58d08d58743134027")]
 [assembly: System.Reflection.AssemblyProductAttribute("maf02_aifoundry")]
 [assembly: System.Reflection.AssemblyTitleAttribute("maf02_aifoundry")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
