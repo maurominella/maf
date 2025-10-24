@@ -90,12 +90,12 @@ await foreach (var responseChunk in workflowAgent.RunStreamingAsync(question))
 }
 
 
-[Description("Gets the author of the story.")]
-string GetAuthor() => "Jack Torrance";
+[Description("Returns the author of the story.")]
+string GetStoryAuthor() => "Mauro Minella";
 
 [Description("Formats the story for display.")]
 string FormatStory(string title, string author, string story) =>
-    $"Title: {title}\nAuthor: {author}\n\n{story}";
+    $"Story title: {title}\nAuthor: {author}\n\n{story}";
 
 
 // We start creating ChatClientAgent, which is a general-purpose agent that can talk to any IChatClient implementation.
@@ -107,7 +107,7 @@ AIAgent writerWithTools = new Microsoft.Agents.AI.ChatClientAgent(
         ChatOptions = new Microsoft.Extensions.AI.ChatOptions
         {
             Tools = [
-                AIFunctionFactory.Create(GetAuthor),
+                AIFunctionFactory.Create(GetStoryAuthor),
                 AIFunctionFactory.Create(FormatStory)
             ],
         }

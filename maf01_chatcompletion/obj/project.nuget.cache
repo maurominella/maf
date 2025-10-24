@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "kyYTEAEFFXM=",
+  "dgSpecHash": "+2wWKw3DXw8=",
   "success": true,
-  "projectFilePath": "E:\\Users\\mauromi\\source\\git_repos\\maf\\HelloWorldAgents\\HelloWorldAgents.csproj",
+  "projectFilePath": "E:\\Users\\mauromi\\source\\git_repos\\maf\\maf01_chatcompletion\\maf01_chatcompletion.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mauromi\\.nuget\\packages\\microsoft.agents.ai\\1.0.0-preview.251016.1\\microsoft.agents.ai.1.0.0-preview.251016.1.nupkg.sha512",
     "C:\\Users\\mauromi\\.nuget\\packages\\microsoft.agents.ai.abstractions\\1.0.0-preview.251016.1\\microsoft.agents.ai.abstractions.1.0.0-preview.251016.1.nupkg.sha512",

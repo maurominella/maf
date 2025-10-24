@@ -737,11 +737,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Users\\mauromi\\source\\git_repos\\maf\\HelloWorldAgents\\HelloWorldAgents.csproj",
-      "projectName": "HelloWorldAgents",
-      "projectPath": "E:\\Users\\mauromi\\source\\git_repos\\maf\\HelloWorldAgents\\HelloWorldAgents.csproj",
+      "projectUniqueName": "E:\\Users\\mauromi\\source\\git_repos\\maf\\maf01_chatcompletion\\maf01_chatcompletion.csproj",
+      "projectName": "maf01_chatcompletion",
+      "projectPath": "E:\\Users\\mauromi\\source\\git_repos\\maf\\maf01_chatcompletion\\maf01_chatcompletion.csproj",
       "packagesPath": "C:\\Users\\mauromi\\.nuget\\packages\\",
-      "outputPath": "E:\\Users\\mauromi\\source\\git_repos\\maf\\HelloWorldAgents\\obj\\",
+      "outputPath": "E:\\Users\\mauromi\\source\\git_repos\\maf\\maf01_chatcompletion\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
