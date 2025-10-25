@@ -27,7 +27,6 @@ var cc = new OpenAI.Chat.ChatClient(
             new System.ClientModel.ApiKeyCredential(Environment.GetEnvironmentVariable("GITHUB_TOKEN")!),
             new OpenAI.OpenAIClientOptions { Endpoint = new Uri("https://models.github.ai/inference") });
 
-
 // - The ADAPTER PROVIDER (from package Microsoft.Extensions.AI.OpenAI) exposes the extension AsIChatClient()
 //   that builds a wrapper around the vendor-specific ChatClient (cc) to expose the standard IChatClient interface.
 // - cc_adapter implements IChatClient interface through the adapter --> a concrete object that delegates all calls to cc.

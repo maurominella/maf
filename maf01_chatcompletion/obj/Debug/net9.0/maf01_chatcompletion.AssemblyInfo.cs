@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("maf01_chatcompletion")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7527c25e3419b96c917768f58d08d58743134027")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3fd2f9a443f221966e344a0798861c1a8fd25ea5")]
 [assembly: System.Reflection.AssemblyProductAttribute("maf01_chatcompletion")]
 [assembly: System.Reflection.AssemblyTitleAttribute("maf01_chatcompletion")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
