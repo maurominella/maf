@@ -9,29 +9,27 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="agents/CreatureQuestioner.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="agents/AnimalPicker.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="agents/AnimalJoker.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="agents/Reviewer.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="agents/Statistician.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <!-- Files to copy into output directory -->
+    <None Include="agents/CreatureQuestioner.txt" CopyToOutputDirectory="Always" />
+    <None Include="agents/AnimalPicker.txt" CopyToOutputDirectory="Always" />
+    <None Include="agents/AnimalJoker.txt" CopyToOutputDirectory="Always" />
+    <None Include="agents/Reviewer.txt" CopyToOutputDirectory="Always" />
+    <None Include="agents/Statistician.txt" CopyToOutputDirectory="Always" />
 
-    <PackageReference Include="Azure.Identity" Version="1.17.0" />
-    <PackageReference Include="Azure.AI.Agents.Persistent" Version="1.2.0-beta.6" />
+    <!-- MAF runtime + Azure AI Foundry provider -->
     <PackageReference Include="Microsoft.Agents.AI" Version="1.0.0-preview.251016.1" />
     <PackageReference Include="Microsoft.Agents.AI.AzureAI" Version="1.0.0-preview.251016.1" />
     <PackageReference Include="Microsoft.Agents.AI.Workflows" Version="1.0.0-preview.251016.1" />
+    
+    <!-- Azure AI Foundry SDK (Persistent agents) -->
+    <PackageReference Include="Azure.AI.Agents.Persistent" Version="1.2.0-beta.6" />
+    <PackageReference Include="Azure.Identity" Version="1.17.0" />
+
+    <!-- MEAI (interfaces) + OpenAI provider -->
     <PackageReference Include="Microsoft.Extensions.AI" Version="9.10.1" />
     <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="9.10.1-preview.1.25521.4" />
+
+    <!-- SDK OpenAI (optional if you use DI directly from the provider; here we use it) -->
     <PackageReference Include="OpenAI" Version="2.5.0" />    
   </ItemGroup>
 
