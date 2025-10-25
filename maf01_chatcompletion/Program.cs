@@ -22,6 +22,7 @@ using Microsoft.Extensions.AI;
 
 var question = "Write a short story about a haunted house, using no more than 10 words.";
 
+// Create the vendor-specific ChatClient for GitHub AI
 var cc = new OpenAI.Chat.ChatClient(
             "gpt-4o-mini",
             new System.ClientModel.ApiKeyCredential(Environment.GetEnvironmentVariable("GITHUB_TOKEN")!),
@@ -35,6 +36,9 @@ var cc = new OpenAI.Chat.ChatClient(
 //   - the class/method may live in the namespace Microsoft.Extensions.AI or in a static class called OpenAIClientExtensions.
 // - This is needed to use MAF that does not know OpenAI, it only knows the standard IChatClient interface 
 //   defined in Microsoft.Extensions.AI namespace of the Microsoft.Extensions.AI.OpenAI package.
+// - Now Using AsIChatClient method from Microsoft.Extensions.AI.OpenAI package...ì
+//   ...to adapt the OpenAI ChatClient to the MAF IChatClient interface defined in Microsoft.Extensions.AI
+
 Microsoft.Extensions.AI.IChatClient cc_adapter = Microsoft.Extensions.AI.OpenAIClientExtensions.AsIChatClient(cc);
 
 
@@ -42,7 +46,8 @@ Microsoft.Extensions.AI.IChatClient cc_adapter = Microsoft.Extensions.AI.OpenAIC
 
 Console.WriteLine("\n\n+++ Running writer +++\n");
 
-// We start creating ChatClientAgent, which is a general-purpose agent that can talk to any IChatClient implementation.
+// Create a ChatClientAgent object, which is a general-purpose agent that can talk to any IChatClient implementation.
+// Convert to the MAF AIAgent type to leverage polymorphism
 AIAgent writer = new Microsoft.Agents.AI.ChatClientAgent(
     chatClient: cc_adapter, new Microsoft.Agents.AI.ChatClientAgentOptions()
     {
@@ -115,7 +120,7 @@ AIAgent writerWithTools = new Microsoft.Agents.AI.ChatClientAgent(
 Console.WriteLine("\n\n+++ Running workflow-with-tools +++\n");
 
 // Create a workflow that connects the new writerWithTools agent to the translator agent
-Workflow workflowWithTools =
+Microsoft.Agents.AI.Workflows.Workflow workflowWithTools =
     AgentWorkflowBuilder
         .BuildSequential(writerWithTools, translator);
 
