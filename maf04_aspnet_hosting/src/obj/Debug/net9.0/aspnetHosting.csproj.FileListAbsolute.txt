@@ -46,3 +46,14 @@ E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\
 E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\aspnetHosting.pdb
 E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\aspnetHosting.genruntimeconfig.cache
 E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\ref\aspnetHosting.dll
+E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\bin\Debug\net9.0\aspnetHosting.staticwebassets.endpoints.json
+E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\rpswa.dswa.cache.json
+E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\aspnetHosting.MvcApplicationPartsAssemblyInfo.cache
+E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\rjimswa.dswa.cache.json
+E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
+E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
+E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\scopedcss\bundle\aspnetHosting.styles.css
+E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\staticwebassets.build.json
+E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\staticwebassets.build.json.cache
+E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\staticwebassets.development.json
+E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\staticwebassets.build.endpoints.json

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("aspnetHosting")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+20bb3bc6ba3d18f37389e4ea4333db77e656c9c5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+de48504a8bb94b63604a83dbc49be3cec4616888")]
 [assembly: System.Reflection.AssemblyProductAttribute("aspnetHosting")]
 [assembly: System.Reflection.AssemblyTitleAttribute("aspnetHosting")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
