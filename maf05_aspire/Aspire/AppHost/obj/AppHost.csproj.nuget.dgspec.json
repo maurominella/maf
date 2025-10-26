@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Users\\mauromi\\source\\git_repos\\maf\\maf04_aspnet_hosting\\src\\AspnetHosting.csproj": {}
+    "E:\\Users\\mauromi\\source\\git_repos\\maf\\maf05_aspire\\Aspire\\AppHost\\AppHost.csproj": {}
   },
   "projects": {
-    "E:\\Users\\mauromi\\source\\git_repos\\maf\\maf04_aspnet_hosting\\src\\AspnetHosting.csproj": {
+    "E:\\Users\\mauromi\\source\\git_repos\\maf\\maf05_aspire\\Aspire\\AppHost\\AppHost.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Users\\mauromi\\source\\git_repos\\maf\\maf04_aspnet_hosting\\src\\AspnetHosting.csproj",
-        "projectName": "AspnetHosting",
-        "projectPath": "E:\\Users\\mauromi\\source\\git_repos\\maf\\maf04_aspnet_hosting\\src\\AspnetHosting.csproj",
+        "projectUniqueName": "E:\\Users\\mauromi\\source\\git_repos\\maf\\maf05_aspire\\Aspire\\AppHost\\AppHost.csproj",
+        "projectName": "AppHost",
+        "projectPath": "E:\\Users\\mauromi\\source\\git_repos\\maf\\maf05_aspire\\Aspire\\AppHost\\AppHost.csproj",
         "packagesPath": "C:\\Users\\mauromi\\.nuget\\packages\\",
-        "outputPath": "E:\\Users\\mauromi\\source\\git_repos\\maf\\maf04_aspnet_hosting\\src\\obj\\",
+        "outputPath": "E:\\Users\\mauromi\\source\\git_repos\\maf\\maf05_aspire\\Aspire\\AppHost\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -50,37 +50,19 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
-            "Azure.AI.Agents.Persistent": {
+            "Aspire.Dashboard.Sdk.win-x64": {
               "target": "Package",
-              "version": "[1.2.0-beta.6, )"
+              "version": "[9.4.2, )",
+              "autoReferenced": true
             },
-            "Azure.Identity": {
+            "Aspire.Hosting.AppHost": {
               "target": "Package",
-              "version": "[1.17.0, )"
+              "version": "[9.4.2, )"
             },
-            "Microsoft.Agents.AI": {
+            "Aspire.Hosting.Orchestration.win-x64": {
               "target": "Package",
-              "version": "[1.0.0-preview.251016.1, )"
-            },
-            "Microsoft.Agents.AI.AzureAI": {
-              "target": "Package",
-              "version": "[1.0.0-preview.251016.1, )"
-            },
-            "Microsoft.Agents.AI.Workflows": {
-              "target": "Package",
-              "version": "[1.0.0-preview.251016.1, )"
-            },
-            "Microsoft.Extensions.AI": {
-              "target": "Package",
-              "version": "[9.10.1, )"
-            },
-            "Microsoft.Extensions.AI.OpenAI": {
-              "target": "Package",
-              "version": "[9.10.1-preview.1.25521.4, )"
-            },
-            "OpenAI": {
-              "target": "Package",
-              "version": "[2.5.0, )"
+              "version": "[9.4.2, )",
+              "autoReferenced": true
             }
           },
           "imports": [
@@ -95,9 +77,6 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }

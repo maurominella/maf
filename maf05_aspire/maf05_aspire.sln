@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "maf05_aspire", "src\maf05_aspire.csproj", "{70F63AEA-CCF2-1806-EF2A-6770654DB530}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{70F63AEA-CCF2-1806-EF2A-6770654DB530}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70F63AEA-CCF2-1806-EF2A-6770654DB530}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70F63AEA-CCF2-1806-EF2A-6770654DB530}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70F63AEA-CCF2-1806-EF2A-6770654DB530}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C155F68B-2105-4D74-860A-8C3C3517B2AD}
+	EndGlobalSection
+EndGlobal
