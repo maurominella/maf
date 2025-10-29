@@ -14,13 +14,12 @@ var aiFoundryAgentsClient = new Azure.AI.Agents.Persistent.PersistentAgentsClien
 #region OPTION 1 TO USE SERVER SIDE PERSISTENT AGENTS
 // You can create a server side persistent agent with the Azure.AI.Agents.Persistent SDK.
 // The following instruction creates the AI Foundry Agent in the AI Foundry project and returns its metadata.
-var aiFoundryAgent1Metadata = await aiFoundryAgentsClient.Administration.CreateAgentAsync(
-    model: deploymentName,
-    name: JokerName,
-    instructions: JokerInstructions);
-
-// Here we extract the created agent from its metadata, but it's still NOT a MAF agent yet.
-var aiFoundryAgent1 = aiFoundryAgent1Metadata.Value;
+// It's still NOT a MAF agent yet.
+Azure.AI.Agents.Persistent.PersistentAgent aiFoundryAgent1 = (
+    await aiFoundryAgentsClient.Administration.CreateAgentAsync(
+        model: deploymentName,
+        name: JokerName,
+        instructions: JokerInstructions)).Value;
 
 // You can retrieve an already created server side persistent agent as an AIAgent.
 // This allows you to separate the creation and usage of the agent.

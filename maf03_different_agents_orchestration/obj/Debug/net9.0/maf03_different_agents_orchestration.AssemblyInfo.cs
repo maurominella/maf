@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("maf03_different_agents_orchestration")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+20bb3bc6ba3d18f37389e4ea4333db77e656c9c5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7c00c8737926804aa0701933e78501b1c68f6018")]
 [assembly: System.Reflection.AssemblyProductAttribute("maf03_different_agents_orchestration")]
 [assembly: System.Reflection.AssemblyTitleAttribute("maf03_different_agents_orchestration")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,5 +1,4 @@
-﻿using Azure.AI.Agents.Persistent;
-using Microsoft.Agents.AI;
+using Azure.AI.Agents.Persistent;
 using Microsoft.Agents.AI.Workflows;
 
 #region Setup environment variables
@@ -12,7 +11,7 @@ var openAIApiKeyCredential = Environment.GetEnvironmentVariable("GITHUB_TOKEN")!
 #endregion
 
 #region CreatureQuestioner - OpenAI MAF Agent
-var openAIMafAgentCreatureQuestioner = await GenericCreateAgentAsync(
+Microsoft.Agents.AI.AIAgent openAIMafAgentCreatureQuestioner = await GenericCreateAgentAsync(
     agent_type: "openaiMafAgent",
     agent_name: "CreatureQuestioner",
     openAIDeploymentName: openAIDeploymentName,
@@ -25,7 +24,7 @@ Console.WriteLine(openAIMafAgentCreatureQuestionerResponse.Text);
 #endregion
 
 #region AnimalPicker - AI Foundry MAF Agent with Bing Grounding Tool
-var aiFoundryMafAgentAnimalPicker = await GenericCreateAgentAsync(
+Microsoft.Agents.AI.AIAgent aiFoundryMafAgentAnimalPicker = await GenericCreateAgentAsync(
     agent_type: "aiFoundryMafAgent",
     agent_name: "AnimalPicker",
     aiFoundryProjectEndpoint: aiFoundryProjectEndpoint,
@@ -34,7 +33,8 @@ var aiFoundryMafAgentAnimalPicker = await GenericCreateAgentAsync(
 
 // Test the AI Foundry MAF Agent
 Microsoft.Agents.AI.AgentThread thread = aiFoundryMafAgentAnimalPicker.GetNewThread();
-Console.WriteLine(await aiFoundryMafAgentAnimalPicker.RunAsync(openAIMafAgentCreatureQuestionerResponse.Text, thread));
+var aiFoundryMafAgentAnimalPickerResponse = await aiFoundryMafAgentAnimalPicker.RunAsync(openAIMafAgentCreatureQuestionerResponse.Text, thread);
+Console.WriteLine(aiFoundryMafAgentAnimalPickerResponse.Text);
 #endregion
 
 #region Workflow connecting the different agents
@@ -45,7 +45,7 @@ Microsoft.Agents.AI.Workflows.Workflow mafWorkflow =
 
 // AsAgentAsync is defined in Microsoft.Agents.AI.Workflows...
 // ...and returns a MAF AIAgent that represents the entire workflow
-AIAgent mafAgentWorkflow = await mafWorkflow.AsAgentAsync();
+Microsoft.Agents.AI.AIAgent mafAgentWorkflow = await mafWorkflow.AsAgentAsync();
 
 await foreach (var responseChunk in mafAgentWorkflow.RunStreamingAsync("Never mind"))
 {
@@ -85,11 +85,11 @@ static async Task<string> ReadAgentInstructionsAsync(string agent_name)
 
 
 // Single Chat function for all kinds of agents
-static async Task<AIAgent> GenericCreateAgentAsync(string agent_type, string agent_name,
+static async Task<Microsoft.Agents.AI.AIAgent> GenericCreateAgentAsync(string agent_type, string agent_name,
     string? openAIDeploymentName = null, string? openAIApiKeyCredential = null, string? openAIEndpoint = null,
     string? aiFoundryProjectEndpoint = null, string? aiFoundryDeploymentName = null, string? bingConnectionId = null)
 {
-    AIAgent _agent = null;
+    Microsoft.Agents.AI.AIAgent _agent = null;
 
     if (agent_type == "openaiMafAgent")
     {
@@ -105,7 +105,7 @@ static async Task<AIAgent> GenericCreateAgentAsync(string agent_type, string age
 
         // Create a ChatClientAgent object, which is a general-purpose agent that can talk to any IChatClient implementation.
         // Convert to the MAF AIAgent type to leverage polymorphism
-        AIAgent openAIMafAgent = new Microsoft.Agents.AI.ChatClientAgent(
+        Microsoft.Agents.AI.AIAgent openAIMafAgent = new Microsoft.Agents.AI.ChatClientAgent(
             chatClient: cc_adapter, new Microsoft.Agents.AI.ChatClientAgentOptions()
             {
                 Name = agent_name,
@@ -135,17 +135,16 @@ static async Task<AIAgent> GenericCreateAgentAsync(string agent_type, string age
         }
 
         // The following instruction creates the AI Foundry Agent in the AI Foundry project and returns its metadata.
-        var aiFoundryAgentMetadata = await aiFoundryAgentsClient.Administration.CreateAgentAsync(
+        // It's still NOT a MAF agent yet.
+        Azure.AI.Agents.Persistent.PersistentAgent aiFoundryAgent = (await aiFoundryAgentsClient.Administration.CreateAgentAsync(
             model: aiFoundryDeploymentName,
             name: agent_name,
             instructions: await ReadAgentInstructionsAsync(agent_name),
-            tools: tools);
+            tools: tools)).Value;
 
-        // Extract the created agent from its metadata, but it's still NOT a MAF agent yet.
-        var aiFoundryAgent = aiFoundryAgentMetadata.Value;
 
         // Convert the persistent AI Foundry agent to a MAF agent.
-        AIAgent aiFoundryMafAgent = await aiFoundryAgentsClient.GetAIAgentAsync(aiFoundryAgent.Id);
+        Microsoft.Agents.AI.AIAgent aiFoundryMafAgent = await aiFoundryAgentsClient.GetAIAgentAsync(aiFoundryAgent.Id);
 
         _agent = aiFoundryMafAgent;
     }

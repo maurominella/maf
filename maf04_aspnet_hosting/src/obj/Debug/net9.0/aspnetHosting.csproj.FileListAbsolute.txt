@@ -40,7 +40,6 @@ E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\
 E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\aspnetHosting.AssemblyInfo.cs
 E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\aspnetHosting.csproj.CoreCompileInputs.cache
 E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\aspnetHosting.sourcelink.json
-E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\aspnetHo.3841CAE7.Up2Date
 E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\aspnetHosting.dll
 E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\refint\aspnetHosting.dll
 E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\aspnetHosting.pdb
@@ -57,3 +56,4 @@ E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\
 E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\staticwebassets.build.json.cache
 E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\staticwebassets.development.json
 E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\staticwebassets.build.endpoints.json
+E:\Users\mauromi\source\git_repos\maf\maf04_aspnet_hosting\src\obj\Debug\net9.0\AspnetHo.35432C07.Up2Date
