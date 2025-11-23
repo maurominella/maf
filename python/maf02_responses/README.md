@@ -1,8 +1,8 @@
 # Azure OpenAI Responses Agents sample
 
 ## UV Installation
-- on Linux / MAC --> `curl -LsSf https://astral.sh/uv/install.sh | sh`
-- on Windows --> `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+- On Linux / MAC --> `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- On Windows --> `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
 
 ## Steps
 - Create the environment: `uv init maf02_responses --python 3.12`.
