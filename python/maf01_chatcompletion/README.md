@@ -1,6 +1,6 @@
 # UV Installation
-- on Linux / MAC --> curl -LsSf https://astral.sh/uv/install.sh | sh
-- on Windows --> powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+- on Linux / MAC --> `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- on Windows --> `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
 
 # Steps
 - create the environment: `uv init mcp_server_getweather --python 3.12`
