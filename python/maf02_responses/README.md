@@ -18,7 +18,7 @@
 It uses the **Microsoft Agent Framework** to create an agent that relies on the Azure OpenAI Responses service:
 - First, it creates the client ***AzureOpenAIResponsesClient*** to the Azure OpenAI endpoint -like `https://my-azure-openai-resource.openai.azure.com/`- that is [responses-API enabled](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/responses?view=foundry-classic&tabs=python-key).
 - Then, it uses the client to create the agent.
-- Bonus demo: it engages AssistantApi tools like *CodeInterpreter* and *FileSearch*.
+- Bonus demo: it engages *AssistantApi* tools like **Function Tools** and **CodeInterpreter**.
 
 ## Reference docs
 - [Azure OpenAI Responses Agents](https://learn.microsoft.com/en-us/agent-framework/user-guide/agents/agent-types/azure-openai-responses-agent?pivots=programming-language-python)
