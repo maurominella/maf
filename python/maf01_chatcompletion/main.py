@@ -1,3 +1,5 @@
+# inspired by https://learn.microsoft.com/en-us/agent-framework/user-guide/agents/agent-types/azure-openai-chat-completion-agent?pivots=programming-language-python
+
 import asyncio
 import os
 from agent_framework.azure import AzureOpenAIChatClient
