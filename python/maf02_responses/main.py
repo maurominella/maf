@@ -7,7 +7,9 @@ from azure.identity import AzureCliCredential, DefaultAzureCredential, get_beare
 from openai import OpenAI
 
 def maf_responsesai_agent_creation() -> agent_framework.ChatAgent:
-    # Create an agent using Azure OpenAI Responses
+    """Create an agent using Azure OpenAI Responses"""
+
+    # First, create the Azure OpenAI Responses client
     openairesponses_client = AzureOpenAIResponsesClient(
         credential=AzureCliCredential(),
         endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
@@ -15,6 +17,7 @@ def maf_responsesai_agent_creation() -> agent_framework.ChatAgent:
         api_version = os.getenv("AZURE_OPENAI_RESPONSES_API_VERSION"), # v1
     )
 
+    # Then, create the agent
     openairesponses_agent = openairesponses_client.create_agent(
         name="HelpfulAssistant",
         instructions="You are a helpful assistant that can write and execute Python code.", 
@@ -57,6 +60,7 @@ def main():
 
     print("\n\n" + "*"*80 + " RESPONSE #2")
     print(response2) 
+    
     
 if __name__ == "__main__":
     main()

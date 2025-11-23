@@ -78,7 +78,7 @@ AIAgent writerWithTools = chatCompletionClient.CreateAIAgent(
         ]);
 
 // Invoke the agent WITH TOOLS (and streaming support).
-Console.WriteLine("\n\n+++ Running Writer with streaming +++\n");
+Console.WriteLine("\n\n+++ Running Writer with Tools +++\n");
 await foreach (var update in writerWithTools.RunStreamingAsync(question))
 {
     Console.Write(update);
