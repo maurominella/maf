@@ -11,7 +11,7 @@ using Microsoft.Agents.AI;
 using Azure.Identity;
 
 const string agent1V1Name = "jokeragent1v1"; 
-const string agent2V2Name = "jokeragent2v2"; 
+const string agent2V2Name = "jokeragent2v1"; 
 const string agentInstructionsV1 = "You are good at telling jokes. You speak Italian only, even if the question is in another language.";
 var projectEndpoint = Environment.GetEnvironmentVariable("AIF_BASPROJECT_ENDPOINT")!;
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
@@ -30,20 +30,20 @@ var agentMetadata = await persistentAgentsClient.Administration.CreateAgentAsync
     instructions: agentInstructionsV1);
 
 // Secondly, retrieve as an AIAgent the agent that was just created using its ID
-AIAgent agent1 = await persistentAgentsClient.GetAIAgentAsync(agentMetadata.Value.Id);
+AIAgent agent1V1 = await persistentAgentsClient.GetAIAgentAsync(agentMetadata.Value.Id);
 #endregion
 
 #region Create persistent agent #2 V1 in a single step
 // Create the AI Foundry agent as an AIAgent object directly
-AIAgent agent2 = await persistentAgentsClient.CreateAIAgentAsync(
+AIAgent agent2V1 = await persistentAgentsClient.CreateAIAgentAsync(
     model: deploymentName,
     name: agent2V2Name,
     instructions: agentInstructionsV1);
 #endregion
 
 #region Retrieve the agent #3 V1 from agent #2 V1 as an AIAgent using its ID
-AIAgent agent3 = await persistentAgentsClient.GetAIAgentAsync(agent2.Id);
+AIAgent agent3V1 = await persistentAgentsClient.GetAIAgentAsync(agent2V1.Id);
 #endregion
 
 // Invoke the agent and output the text result.
-Console.WriteLine(await agent3.RunAsync("Tell me a joke about a pirate."));
+Console.WriteLine(await agent3V1.RunAsync("Tell me a joke about a pirate."));
