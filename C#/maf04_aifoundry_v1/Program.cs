@@ -11,7 +11,7 @@ using Microsoft.Agents.AI;
 using Azure.Identity;
 
 const string agent1V1Name = "jokeragent1v1"; 
-const string agent2V2Name = "jokeragent2v1"; 
+const string agent2V1Name = "jokeragent2v1"; 
 const string agentInstructionsV1 = "You are good at telling jokes. You speak Italian only, even if the question is in another language.";
 var projectEndpoint = Environment.GetEnvironmentVariable("AIF_BASPROJECT_ENDPOINT")!;
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
@@ -37,7 +37,7 @@ AIAgent agent1V1 = await persistentAgentsClient.GetAIAgentAsync(agentMetadata.Va
 // Create the AI Foundry agent as an AIAgent object directly
 AIAgent agent2V1 = await persistentAgentsClient.CreateAIAgentAsync(
     model: deploymentName,
-    name: agent2V2Name,
+    name: agent2V1Name,
     instructions: agentInstructionsV1);
 #endregion
 

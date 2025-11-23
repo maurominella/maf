@@ -22,13 +22,16 @@ const string agentInstructionsV2 = "You are good at telling jokes. You speak Eng
 #endregion
 
 // Get a client to create/retrieve server side agents with.
-var aiFoundryProjectClient = new Azure.AI.Projects.AIProjectClient(
-    new Uri(projectEndpoint!), new Azure.Identity.AzureCliCredential());
+var aiFoundryProjectClient = new AIProjectClient(
+    new Uri(projectEndpoint!), 
+    new Azure.Identity.AzureCliCredential());
 
 #region Create agent #1 V2
 // Create a server side V2 agent version with the Azure.AI.Agents SDK client below. 
-AIAgent agent1V2 = aiFoundryProjectClient.CreateAIAgent(
-    name: agent1V2Name, model: deploymentName, instructions: agentInstructionsV2);
+AIAgent agent1V2 = await aiFoundryProjectClient.CreateAIAgentAsync(
+    model: deploymentName, 
+    name: agent1V2Name, 
+    instructions: agentInstructionsV2);
 #endregion
 
 #region Retrieve agent #2 V2
