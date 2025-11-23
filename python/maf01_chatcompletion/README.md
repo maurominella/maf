@@ -3,8 +3,8 @@
 - on Windows --> `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
 
 # Steps
-- create the environment: `uv init mcp_server_getweather --python 3.12`
-- move into the folder that is automatically created: `cd mcp_server_getweather`
+- create the environment: `uv init maf01_chatcompletion --python 3.12`
+- move into the folder that is automatically created: `cd maf01_chatcompletion`
 - syncrhonize to create the file structure: `uv sync`
 - Activate the environment:
   - on Linux/MC --> `source .venv/bin/activate`
