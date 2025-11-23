@@ -1,5 +1,5 @@
 ﻿// SUMMARY:
-// - MAF: whatever is under Microsoft.Agents.AI (Agent, Options, RunAsync, AgentRunResponse)
+// - Agent Framework: whatever is under Microsoft.Agents.AI (Agent, Options, RunAsync, AgentRunResponse)
 // - Abstraction layer: Microsoft.Extensions.AI (interfaces, e.g. IChatClient)
 // - Adapter OpenAI -> IChatClient: provided by the Microsoft.Extensions.AI.OpenAI package
 // - SDK vendor: OpenAI package
@@ -8,25 +8,43 @@
 // OpenAI SDK → creates the concrete client (ChatClient).
 // Microsoft.Extensions.AI.OpenAI → provides the adapter (AsIChatClient()).
 // Microsoft.Extensions.AI → defines the interface (IChatClient).
-// Microsoft.Agents.AI (MAF) → uses the interface to create and manage agents.
+// Microsoft.Agents.AI (Agent Framework) → uses the interface to create and manage agents.
 
 
-// - VENDOR SDK (NOT MAF PACKAGE), coming from NuGet package OpenAI.
+// - VENDOR SDK (NOT Agent Framework PACKAGE), coming from NuGet package OpenAI.
 // - Here we create the vendor Native Client (OpenAI.Chat.ChatClient) to OpenAI
 //   needed to talk to an OpenAI-compatible endpoint (GitHub AI in this case).
-// - This is NOT MAF code, but vendor-specific code, a bridge to the vendor SDK and LLM.
+// - This is NOT Agent Framework code, but vendor-specific code, a bridge to the vendor SDK and LLM.
+
+// setx GITHUB_TOKEN ""github_pat_11AHXNH..." # afer this, please restart the terminal
+// setx AIF_STD_PROJECT_ENDPOINT "https://aif2stdsvhdu2.services.ai.azure.com/api/projects/aif2stdwusprj01hdu2" # afer this, please restart the terminal
+// $env:AZURE_OPENAI_CHAT_DEPLOYMENT_NAME = "gpt-4o" # to make it immediate in the current terminal session
+// check with echo $env:AIF_BASPROJECT_ENDPOINT (after restarting the terminal) that the variables are set correctly.
+
+
 using System.ComponentModel;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;
 
-var question = "Write a short story about a haunted house, using no more than 10 words.";
+var question = "Write a short story about a haunted house, using no more than 100 words.";
+var instructions = "Write stories that are engaging and creative.";
+var instructionsToolsAware = "Write stories that are engaging and creative. For each story, please include all its possible details taken from the provided tools.";
+
+var e = Environment.GetEnvironmentVariable("GITHUB_TOKEN")!;
 
 // Create the vendor-specific ChatClient for GitHub AI
 var cc = new OpenAI.Chat.ChatClient(
             "gpt-4o-mini",
             new System.ClientModel.ApiKeyCredential(Environment.GetEnvironmentVariable("GITHUB_TOKEN")!),
             new OpenAI.OpenAIClientOptions { Endpoint = new Uri("https://models.github.ai/inference") });
+
+// Send a chat request using the vendor-specific client
+OpenAI.Chat.ChatCompletion response_openAI = (await cc.CompleteChatAsync("Hi there!")).Value;
+
+// Read the model's reply
+Console.WriteLine(response_openAI.Content[0].Text);
+
 
 // - The ADAPTER PROVIDER (from package Microsoft.Extensions.AI.OpenAI) exposes the extension AsIChatClient()
 //   that builds a wrapper around the vendor-specific ChatClient (cc) to expose the standard IChatClient interface.
@@ -52,7 +70,7 @@ AIAgent writer = new Microsoft.Agents.AI.ChatClientAgent(
     chatClient: cc_adapter, new Microsoft.Agents.AI.ChatClientAgentOptions()
     {
         Name = "Writer",
-        Instructions = "Write stories that are engaging and creative."
+        Instructions = instructions
     });
 
 // Now we can use the agent to run tasks
@@ -86,7 +104,7 @@ Workflow workflow =
     AgentWorkflowBuilder
         .BuildSequential(writer, translator);
 
-AIAgent workflowAgent = await workflow.AsAgentAsync();
+AIAgent workflowAgent = workflow.AsAgent();
 
 await foreach (var responseChunk in workflowAgent.RunStreamingAsync(question))
 {
@@ -94,25 +112,30 @@ await foreach (var responseChunk in workflowAgent.RunStreamingAsync(question))
 }
 
 
-[Description("Returns the author of the story.")]
+#region Tools as inline functions
+[Description("Provides the author of the story.")]
 string GetStoryAuthor() => "Mauro Minella";
 
-[Description("Formats the story for display.")]
+[Description("Provides additional details of the story.")]
 string FormatStory(string title, string author, string story) =>
     $"Story title: {title}\nAuthor: {author}\n\n{story}";
 
+// convert simple functions to AIFunctions
+Microsoft.Extensions.AI.AIFunction aiFunctionGetStoryAuthor = Microsoft.Extensions.AI.AIFunctionFactory.Create(GetStoryAuthor);
+var aiFunctionFormatStory = AIFunctionFactory.Create(FormatStory); // same as above
+#endregion
 
-// We start creating ChatClientAgent, which is a general-purpose agent that can talk to any IChatClient implementation.
+
 AIAgent writerWithTools = new Microsoft.Agents.AI.ChatClientAgent(
     chatClient: cc_adapter, new Microsoft.Agents.AI.ChatClientAgentOptions()
     {
         Name = "WriterWithTools",
-        Instructions = question + ", using also available tools.",
+        Instructions = instructionsToolsAware,
         ChatOptions = new Microsoft.Extensions.AI.ChatOptions
         {
             Tools = [
-                AIFunctionFactory.Create(GetStoryAuthor),
-                AIFunctionFactory.Create(FormatStory)
+                aiFunctionGetStoryAuthor,
+                aiFunctionFormatStory
             ],
         }
     });
@@ -124,7 +147,7 @@ Microsoft.Agents.AI.Workflows.Workflow workflowWithTools =
     AgentWorkflowBuilder
         .BuildSequential(writerWithTools, translator);
 
-AIAgent workflowAgentWithTools = await workflowWithTools.AsAgentAsync();
+AIAgent workflowAgentWithTools = workflowWithTools.AsAgent();
 
 await foreach (var responseChunk in workflowAgentWithTools.RunStreamingAsync(question))
 {

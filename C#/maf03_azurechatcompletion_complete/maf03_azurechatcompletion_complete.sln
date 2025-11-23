@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "maf01_chatcompletion", "maf01_chatcompletion.csproj", "{0135A664-185D-829F-0B2E-41B2E93CC69E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "maf03_azurechatcompletion_complete", "maf03_azurechatcompletion_complete.csproj", "{0135A664-185D-829F-0B2E-41B2E93CC69E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
