@@ -1,6 +1,6 @@
 # AI Foundry V2 Workflow Prototype with MAF
 
-This sample demonstrates how to build a **.NET console application** that integrates **AI Foundry V2 agents** with the **Microsoft Agent Framework (MAFThis sample demonstrates how to build a **.NET console application** that integrates **AI Foundry V2 agents** with the **Microsoft Agent Framework (MAF)** for orchestration and tool interoperability.
+This sample demonstrates how to build a **.NET console application** that integrates **AI Foundry V2 agents** with the **Microsoft Agent Framework (MAF)** for orchestration and tool interoperability.
 
 
 ## Sequential Orchestrator in AI Foundry Workflows
