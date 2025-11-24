@@ -83,4 +83,4 @@ var mafAgent
 - Explore memory store and multi-turn threads for stateful conversations.
 
 ## 99. Documentation
-Inspired by [Agent with AzureAIProject sample](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/GettingStarted/AgentProviders/Agent_With_AzureAIProject/Program.cs)
+Inspired by [Agent with AzureAIProject sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/AgentProviders/Agent_With_AzureAIProject)
