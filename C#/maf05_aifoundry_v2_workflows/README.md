@@ -49,22 +49,22 @@ using Azure.AI.Agents.Persistent;
 using Azure.Identity;
 using Microsoft.Agents.AI.AzureAI;
 
-// 1) Configure Foundry client
-var credential = new DefaultAzureCredential();
-var foundryClient = new FoundryClient(new Uri("https://<your-foundry-endpoint>.azure.com"), credential);
+// 1) Create a Foundry client to create/retrieve server side agents.
+var aiFoundryProjectClient = new AIProjectClient(
+    new Uri(projectEndpoint!), 
+    new Azure.Identity.AzureCliCredential());
+
 
 // 2) Create two persistent agents
-var agent1 = await foundryClient.CreateAgentAsync(new CreateAgentOptions
-{
-    Name = "WriterAgent",
-    Instructions = "Write creative and engaging stories."
-});
+var agent1 = await aiFoundryProjectClient.CreateAgentAsync(
+    model: deploymentName, 
+    name: agent1Name, 
+    instructions: agent1Instructions);
 
-var agent2 = await foundryClient.CreateAgentAsync(new CreateAgentOptions
-{
-    Name = "ReviewerAgent",
-    Instructions = "Review text for clarity and tone."
-});
+AIAgent agent2 = await aiFoundryProjectClient.CreateAIAgentAsync(
+    model: deploymentName, 
+    name: agent2Name, 
+    instructions: agent2Instructions);
 
 // 3) Wrap agents with MAF abstractions (optional)
 var mafAgent1 = new AzureAIAgent(agent1);
