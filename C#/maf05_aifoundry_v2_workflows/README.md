@@ -51,7 +51,7 @@ using Microsoft.Agents.AI.AzureAI;
 
 // 1) Create a Foundry client to create/retrieve server side agents.
 var aiFoundryProjectClient = new AIProjectClient(
-    new Uri(projectEndpoint!), 
+    new Uri(projectEndpoint), 
     new Azure.Identity.AzureCliCredential());
 
 

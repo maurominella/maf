@@ -23,7 +23,7 @@ const string agent2Instructions = "You are good at translating text. You underst
 
 // Get a client to create/retrieve server side agents with.
 var aiFoundryProjectClient = new AIProjectClient(
-    new Uri(projectEndpoint!), 
+    new Uri(projectEndpoint), 
     new Azure.Identity.AzureCliCredential());
 
 #region Create agents
@@ -37,6 +37,24 @@ AIAgent agent2 = await aiFoundryProjectClient.CreateAIAgentAsync(
     model: deploymentName, 
     name: agent2Name, 
     instructions: agent2Instructions);
+#endregion
+
+#region Teardown
+// ask to press Y/N to delete the created agents
+Console.Write("Do you want to delete the created agents (Y/N)? > ");
+var input = Console.Read();
+if (char.ToUpper((char)input) == 'Y')
+{
+    aiFoundryProjectClient.Agents.DeleteAgent(agentName:agent1.Name);
+    Console.WriteLine($"Deleted agent: {agent1.Name}");
+    aiFoundryProjectClient.Agents.DeleteAgent(agentName:agent2.Name);
+    Console.WriteLine($"Deleted agent: {agent2.Name}");
+}
+else
+{
+    Console.WriteLine("Agents not deleted.");
+    return;
+}
 #endregion
 
 Console.WriteLine("Agents created successfully.");
