@@ -41,3 +41,37 @@ dotnet add package Azure.Identity
 ```bash
 code .
 ```
+## 4. Initialize your agents<br/>
+Here's an example of creating two AI Foundry V2 agents in C#:
+```bash
+
+using Azure.AI.Agents.Persistent;
+using Azure.Identity;
+using Microsoft.Agents.AI.AzureAI;
+
+// 1) Configure Foundry client
+var credential = new DefaultAzureCredential();
+var foundryClient = new FoundryClient(new Uri("https://<your-foundry-endpoint>.azure.com"), credential);
+
+// 2) Create two persistent agents
+var agent1 = await foundryClient.CreateAgentAsync(new CreateAgentOptions
+{
+    Name = "WriterAgent",
+    Instructions = "Write creative and engaging stories."
+});
+
+var agent2 = await foundryClient.CreateAgentAsync(new CreateAgentOptions
+{
+    Name = "ReviewerAgent",
+    Instructions = "Review text for clarity and tone."
+});
+
+// 3) Wrap agents with MAF abstractions (optional)
+var mafAgent1 = new AzureAIAgent(agent1);
+var mafAgent
+```
+
+## 5. Next steps<br/>
+- Use Workflow Designer in AI Foundry V2 to orchestrate these agents visually or programmatically.
+- Add MAF workflows for advanced orchestration and tool integration.
+- Explore memory store and multi-turn threads for stateful conversations.
