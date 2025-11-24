@@ -7,7 +7,7 @@
 ## Steps
 - Create the environment: `uv init maf04_aifoundry_v1 --python 3.12`.
 - Move into the folder that is automatically created: `cd maf04_aifoundry_v1`.
-- Add libraries: `uv add agent-framework python-dotenv jupyter`.
+- Add libraries: `uv add agent-framework-azure-ai --prerelease=allow python-dotenv jupyter`.
 - Syncrhonize to create the file structure: `uv sync`.
 - Activate the environment:
   - on Linux/MC --> `source .venv/bin/activate`.
