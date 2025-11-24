@@ -1,9 +1,16 @@
-
 # AI Foundry V2 Workflow Prototype with MAF
 
 This sample demonstrates how to build a **.NET console application** that integrates **AI Foundry V2 agents** with the **Microsoft Agent Framework (MAFThis sample demonstrates how to build a **.NET console application** that integrates **AI Foundry V2 agents** with the **Microsoft Agent Framework (MAF)** for orchestration and tool interoperability.
 
 ---
+
+## 0. Variables preparation
+Make sure that the following environment variables are defined, using PowerShell or CMD with Administator privileges:
+```bash
+// setx AIF_BASPROJECT_ENDPOINT "https://aif1bassvj36b.services.ai.azure.com/api/projects/aif1basswcprj01" # afer this, please restart the terminal
+// $env:AZURE_OPENAI_CHAT_DEPLOYMENT_NAME = "gpt-4o" # to make it immediate in the current terminal session
+// check with echo $env:AIF_BASPROJECT_ENDPOINT (after restarting the terminal) that the variables are set correctly.
+```
 
 ## 1. Create the Project
 
@@ -74,3 +81,6 @@ var mafAgent
 - Use Workflow Designer in AI Foundry V2 to orchestrate these agents visually or programmatically.
 - Add MAF workflows for advanced orchestration and tool integration.
 - Explore memory store and multi-turn threads for stateful conversations.
+
+## 99. Documentation
+Inspired by [Agent with AzureAIProject sample](https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/GettingStarted/AgentProviders/Agent_With_AzureAIProject/Program.cs)
