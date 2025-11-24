@@ -19,7 +19,8 @@ Install the following NuGet packages::
 
 ```bash
 dotnet add package Azure.AI.Agents.Persistent --prerelease
-dotnet add package Microsoft.Agents.AI.AzureAI --dotnet add package Microsoft.Agents.AI.AzureAI --prerelease
+dotnet add package Microsoft.Agents.AI.AzureAI --prerelease
+dotnet add package Azure.Identity
 ```
 ## Why these packages?
 - ***Azure.AI.Agents.Persistent***
