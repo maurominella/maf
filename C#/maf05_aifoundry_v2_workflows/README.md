@@ -54,9 +54,8 @@ var aiFoundryProjectClient = new AIProjectClient(
     new Uri(projectEndpoint), 
     new Azure.Identity.AzureCliCredential());
 
-
 // 2) Create two persistent agents
-var agent1 = await aiFoundryProjectClient.CreateAgentAsync(
+AIAgent agent1 = await aiFoundryProjectClient.CreateAgentAsync(
     model: deploymentName, 
     name: agent1Name, 
     instructions: agent1Instructions);
