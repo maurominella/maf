@@ -27,7 +27,7 @@ def maf_responsesai_agent_creation() -> agent_framework.ChatAgent:
     return openairesponses_agent
 
 
-async def maf_agent_invokation(agent: agent_framework.ChatAgent, question: str, streaming: bool=False) -> str:
+async def maf_agent_invocation(agent: agent_framework.ChatAgent, question: str, streaming: bool=False) -> str:
     response = ""
     print("Agent: ", end="", flush=True)
     if streaming:
@@ -52,8 +52,8 @@ def main():
 
     agent = maf_responsesai_agent_creation()
 
-    response1 = asyncio.run(maf_agent_invokation(agent, "Write a Python function that returns the Fibonacci sequence up to n and execute it with n=10.", streaming=False))
-    response2 = asyncio.run(maf_agent_invokation(agent, "Tell me a story about a haunted house.", streaming=True))
+    response1 = asyncio.run(maf_agent_invocation(agent, "Write a Python function that returns the Fibonacci sequence up to n and execute it with n=10.", streaming=False))
+    response2 = asyncio.run(maf_agent_invocation(agent, "Tell me a story about a haunted house.", streaming=True))
     
     print("\n\n" + "*"*80 + " RESPONSE #1")
     print(response1)
