@@ -2,6 +2,51 @@
 
 This sample demonstrates how to build a **.NET console application** that integrates **AI Foundry V2 agents** with the **Microsoft Agent Framework (MAFThis sample demonstrates how to build a **.NET console application** that integrates **AI Foundry V2 agents** with the **Microsoft Agent Framework (MAF)** for orchestration and tool interoperability.
 
+
+## Sequential Orchestrator in AI Foundry Workflows
+
+A **Sequential Orchestrator** executes actions in a strict linear order, where each step depends on the completion of the previous one. This pattern is ideal for multi-stage processes such as **draft → review → translate**, ensuring that intermediate outputs flow into subsequent steps.
+
+### Why Sequential?
+- Each agent adds value that the next agent consumes.
+- Execution is deterministic and easy to visualize.
+- Perfect for pipelines where steps cannot run in parallel.
+
+### Example: Writer → Translator Workflow
+Below is a YAML definition for a simple sequential workflow in **AI Foundry V2**:
+
+```yaml
+kind: workflow
+name: writer-and-translator-workflow
+description: ""
+id: ""
+
+trigger:
+  kind: OnConversationStart
+  id: trigger_wf
+  actions:
+    - kind: InvokeAzureAgent
+      id: writer
+      agent:
+        name: WriterAgent
+      input:
+        messages: =System.LastMessage
+      output:
+        messages: Local.writerOutput
+        autoSend: false
+
+    - kind: InvokeAzureAgent
+      id: translator
+      agent:
+        name: TranslatorAgent
+      input:
+        messages: =Local.writerOutput
+      output:
+        autoSend: true
+
+    - kind: End    - kind: EndConversation
+
+
 ---
 
 ## 0. Environment variables preparation

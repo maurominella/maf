@@ -1,11 +1,4 @@
-﻿﻿// inspired by https://github.com/microsoft/agent-framework/blob/main/dotnet/samples/GettingStarted/AgentProviders/Agent_With_AzureAIProject/Program.cs
-
-// make sure that the following environment variables are defined, using PowerShell or CMD with Administator privileges:
-// setx AIF_BASPROJECT_ENDPOINT "https://aif1bassvj36b.services.ai.azure.com/api/projects/aif1basswcprj01" # afer this, please restart the terminal
-// $env:AZURE_OPENAI_CHAT_DEPLOYMENT_NAME = "gpt-4o" # to make it immediate in the current terminal session
-// check with echo $env:AIF_BASPROJECT_ENDPOINT (after restarting the terminal) that the variables are set correctly.
-
-# region Constants and Variables
+﻿# region Constants and Variables
 using Azure.AI.Agents.Persistent;
 using Azure.Identity;
 using Microsoft.Agents.AI;
