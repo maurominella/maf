@@ -82,5 +82,11 @@ var mafAgent
 - Add MAF workflows for advanced orchestration and tool integration.
 - Explore memory store and multi-turn threads for stateful conversations.
 
-## 99. Documentation
+## Documentation
 Inspired by [Agent with AzureAIProject sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/GettingStarted/AgentProviders/Agent_With_AzureAIProject)
+
+
+## Coming soon
+- Workflow Designer integration guide
+- Python equivalent examples for V1 vs V2
+- Architecture diagram for multi-agent orchestration
