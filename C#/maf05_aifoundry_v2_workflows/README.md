@@ -7,9 +7,9 @@ This sample demonstrates how to build a **.NET console application** that integr
 ## 0. Variables preparation
 Make sure that the following environment variables are defined, using PowerShell or CMD with Administator privileges:
 ```bash
-// setx AIF_BASPROJECT_ENDPOINT "https://aif1bassvj36b.services.ai.azure.com/api/projects/aif1basswcprj01" # afer this, please restart the terminal
-// $env:AZURE_OPENAI_CHAT_DEPLOYMENT_NAME = "gpt-4o" # to make it immediate in the current terminal session
-// check with echo $env:AIF_BASPROJECT_ENDPOINT (after restarting the terminal) that the variables are set correctly.
+setx AIF_BASPROJECT_ENDPOINT "https://aif1bassvj36b.services.ai.azure.com/api/projects/aif1basswcprj01" # afer this, please restart the terminal
+$env:AZURE_OPENAI_CHAT_DEPLOYMENT_NAME = "gpt-4o-mini" # to make it immediately available in the current terminal session
+echo $env:AIF_BASPROJECT_ENDPOINT # justo to check, after restarting the terminal
 ```
 
 ## 1. Create the Project
