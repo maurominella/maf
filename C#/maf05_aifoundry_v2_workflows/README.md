@@ -23,18 +23,18 @@ dotnet add package Microsoft.Agents.AI.AzureAI --prerelease
 dotnet add package Azure.Identity
 ```
 ## Why these packages?
-- ***Azure.AI.Agents.Persistent***
+- ***Azure.AI.Agents.Persistent***<br/>
   The official SDK for **AI Foundry V2**. It supports:
   - Persistent agents
   - Multi-turn conversations
   - Thread and memory store management
 
-- ***Microsoft.Agents.AI.AzureAI***
+- ***Microsoft.Agents.AI.AzureAI***<br/>
   Bridges AI Foundry V2 with MAF, providing:
   - A consistent API for orchestration
   - Integration with MAF abstractions (AIAgent, workflows, tools)
 
-- ***Azure.Identity***
+- ***Azure.Identity***<br/>
   Handles authentication using Azure credentials (e.g., DefaultAzureCredential).
 
 ## 3. Open in VS Code
