@@ -22,7 +22,7 @@ dotnet add package Azure.AI.Agents.Persistent --prerelease
 dotnet add package Microsoft.Agents.AI.AzureAI --prerelease
 dotnet add package Azure.Identity
 ```
-## Why these packages?
+### Why these packages?
 - ***Azure.AI.Agents.Persistent***<br/>
   The official SDK for **AI Foundry V2**. It supports:
   - Persistent agents
