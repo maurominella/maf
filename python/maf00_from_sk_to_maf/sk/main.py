@@ -91,7 +91,7 @@ def main():
     
     # Environment variables loading
     if not load_dotenv("./../../../../config/credentials_my.env"):
-        print("Environment variables not loaded, execution stopped")
+        print(f"Environment variables not loaded, execution stopped. Current directory: {os.getcwd()}")
         return
     # else:
     #     print("Environment variables have been loaded ;-)")
