@@ -8,8 +8,8 @@ using Microsoft.Agents.AI.Workflows;
 var projectEndpoint = Environment.GetEnvironmentVariable("AIF_BASPROJECT_ENDPOINT")!;
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
 
-const string agent1Name = "WriterAgent";
-const string agent2Name = "TranslatorAgent";
+const string agent1Name = "WriterAgent01";
+const string agent2Name = "TranslatorAgent01";
 
 const string agent1Instructions = "You are good at telling jokes. You speak English only, even if the question is in another language.";
 const string agent2Instructions = "You are a translator. Always translate the input text into Italian immediately, without asking for confirmation or adding extra commentary. Output only the translated text.";
@@ -33,18 +33,41 @@ AIAgent agent2 = await aiFoundryProjectClient.CreateAIAgentAsync(
     instructions: agent2Instructions);
 #endregion
 
+#region Invoke agents
+AgentThread threadAgent1 = agent1.GetNewThread();
+var answerAgent1 = await agent1.RunAsync(
+   "Tell me a joke about a pirate.", threadAgent1);
+
+Console.WriteLine(answerAgent1.Text);
+
+AgentThread threadAgent2 = agent2.GetNewThread();
+Console.WriteLine(await agent2.RunAsync(
+   answerAgent1.Text, threadAgent2));
+#endregion
+
+#region Create a volatile workflow with the two agents
+Workflow volatileWorkflow =
+    AgentWorkflowBuilder
+        .BuildSequential(agent1, agent2);
+
+AIAgent workflowAgent = volatileWorkflow.AsAgent();
+
+AgentThread threadwfAgent = workflowAgent.GetNewThread();
+Console.WriteLine(await workflowAgent.RunAsync(
+   "Tell me a joke about a dog.", threadwfAgent));
+#endregion
+
+
 #region Create a persistent workflow with the two agents
 
 
 
 // Create workflow in Foundry
 // Build the workflow by adding executors and connecting them
-var workflow = new WorkflowBuilder(agent1)
+var persistentWorkflow = new WorkflowBuilder(agent1)
     .AddEdge(agent1, agent2)
     .AddEdge(agent2, agent1)
     .Build();
-// Execute the workflow
-// await using StreamingRun run = await InProcessExecution.StreamAsync(workflow, new ChatMessage(ChatRole.User, "Hello World!"));
 #endregion
 
 #region Teardown

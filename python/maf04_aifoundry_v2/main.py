@@ -13,19 +13,21 @@ project_client = AIProjectClient(
 )
 
 myAgent = "my-web-agent"
+
 # Get an existing agent
 agent = project_client.agents.get(agent_name=myAgent)
 print(f"Retrieved agent: {agent.name}")
 
-openai_client = project_client.get_openai_client()
+# Extract the ResponseAPI client from the project client
+openai_response_client = project_client.get_openai_client()
 
-print(openai_client.responses.create(
+print(openai_response_client.responses.create(
     input=[{"role": "user", "content": "Tell me a story about a mouse."}],
     model="gpt-4.1",
 ).output_text)
 
 # Reference the agent to get a response
-response = openai_client.responses.create(
+response = openai_response_client.responses.create(
     input=[{"role": "user", "content": "Tell me what you can help with."}],
     extra_body={"agent": {"name": agent.name, "type": "agent_reference"}},
 )
