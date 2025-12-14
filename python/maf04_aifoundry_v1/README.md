@@ -1,7 +1,15 @@
 # Azure AI Foundry Agents sample - **V1**
 
 ## Notes
-⚠️ Important: This sample uses the V1 version of Microsoft Azure AI Foundry. For newer projects, consider using the latest version of Azure AI Foundry which may have different APIs and improved capabilities.
+⚠️ Important: This sample uses the V1 version of Microsoft Azure AI Foundry. For newer projects, consider using the latest version of Azure AI Foundry which may have different APIs and improved capabilities. Here are the libraries used here:
+```
+azure-ai-agents==1.2.0b5
+azure-ai-projects==1.0.0b12
+azure-ai-inference==1.0.0b9
+agent-framework-core==1.0.0b251016
+agent-framework-azure-ai==1.0.0b251016
+agent-framework-devui==1.0.0b251016
+```
 
 ## What this sample does
 The code showcases two different approaches for creating AI agents that can execute Python code:
