@@ -1,26 +1,66 @@
-import os
-import agent_framework
-import asyncio
+import os, asyncio
 from dotenv import load_dotenv  # requires python-dotenv
 from azure.identity.aio import AzureCliCredential
-from agent_framework.azure import AzureAIAgentClient
+import agent_framework
 from agent_framework import HostedCodeInterpreterTool
 
-def maf_aifoundry_agent_creation() -> agent_framework.ChatAgent:
+async def maf_aifoundry_agent_creation_simple() -> agent_framework.ChatAgent:
     """Create an agent using Azure OpenAI Responses"""
+    from agent_framework.azure import AzureAIAgentClient
+    global project_endpoint, agent_name, instructions, model_deployment_name
 
-    # First, create the Azure OpenAI Responses client
-    aifoundry_client = AzureAIAgentClient(
-        async_credential=AzureCliCredential(),
-        project_endpoint=os.getenv("AIF_BAS_PROJECT_ENDPOINT"),
-        model_deployment_name = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"),        
-    )
+    # Store credential reference for cleanup
+    credential = AzureCliCredential()
+    
+    project_client = AzureAIAgentClient(
+        async_credential=credential,
+        project_endpoint=project_endpoint,
+        model_deployment_name = model_deployment_name)
 
-    agent = aifoundry_client.create_agent(
-        agent_name="HelperAgentPython",
-        instructions="You are a helpful assistant that can write and execute Python code.",
+    agent = project_client.create_agent(
+        agent_name=agent_name,
+        instructions=instructions,
         tools=[HostedCodeInterpreterTool()])
 
+    # Store references for cleanup
+    agent._credential = credential
+    agent._project_client = project_client
+    
+    return agent
+
+async def maf_aifoundry_agent_creation_full() -> agent_framework.ChatAgent:
+    """Create an agent using Azure OpenAI Responses"""
+
+    from azure.ai.projects.aio import AIProjectClient
+    from agent_framework.azure import AzureAIAgentClient
+
+    global model_deployment_name, instructions, project_endpoint, agent_name
+
+    # Store credential reference for cleanup
+    credential = AzureCliCredential()
+    
+    project_client = AIProjectClient(
+        credential=credential,
+        endpoint=project_endpoint)
+
+    created_agent = await project_client.agents.create_agent(
+        name = agent_name,
+        model = model_deployment_name,
+        instructions= instructions)
+    
+    agent_client = AzureAIAgentClient(
+        project_client=project_client,
+        agent_id=created_agent.id)
+    
+    agent = agent_framework.ChatAgent(
+        chat_client=agent_client,
+        tools = [HostedCodeInterpreterTool()],
+        store = True)
+
+    # Store references for cleanup
+    agent._credential = credential
+    agent._project_client = project_client
+    
     return agent
 
 
@@ -28,10 +68,17 @@ async def maf_agent_invocation(agent: agent_framework.ChatAgent, question: str, 
     response = ""
     print("Agent: ", end="", flush=True)
     if streaming:
-        async for chunk in agent.run_stream(question):
-            if chunk.text:
-                print(chunk.text, end="", flush=True)
-                response += chunk.text
+        stream = None
+        try:
+            stream = agent.run_stream(question)
+            async for chunk in stream:
+                if chunk.text:
+                    print(chunk.text, end="", flush=True)
+                    response += chunk.text
+        finally:
+            # Ensure the stream is properly closed
+            if stream is not None and hasattr(stream, 'aclose'):
+                await stream.aclose()
     else:
         result = await agent.run(question)
         print(result.text)
@@ -40,25 +87,68 @@ async def maf_agent_invocation(agent: agent_framework.ChatAgent, question: str, 
     return response
 
 
-def main():
-    # Environment variables loading
+
+async def main_async():
+    """ Environment variables loading """
+    global project_endpoint, model_deployment_name, instructions, agent_name
+
     if not load_dotenv("./../../../config/credentials_my.env"):
         print("Environment variables not loaded, execution stopped")
         return
     else:
         print("Environment variables have been loaded ;-)")
 
-    agent = maf_aifoundry_agent_creation()
+    question = "Tell me a story about a haunted house, then Write a Python function that returns the Fibonacci sequence up to n and execute it with n=10."
+    instructions = "You are a helpful assistant that can write and execute Python code."
+    agent_name = "HelperAgentPython"
+    project_endpoint=os.getenv("AIF_BAS_PROJECT_ENDPOINT")
+    model_deployment_name = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME")
 
-    # response1 = asyncio.run(maf_agent_invocation(agent, "Write a Python function that returns the Fibonacci sequence up to n and execute it with n=10.", streaming=False))
-    response2 = asyncio.run(maf_agent_invocation(agent, "Tell me a story about a haunted house, then Write a Python function that returns the Fibonacci sequence up to n and execute it with n=10.", streaming=True))
-    
-    # print("\n\n" + "*"*80 + " RESPONSE #1")
-    # print(response1)
+    agent_simple = await maf_aifoundry_agent_creation_simple()
+    try:
+        response_simple = await maf_agent_invocation(agent_simple, question, streaming=True)
+        print(f'\n\n{"*"*80} RESPONSE SIMPLE:\n{response_simple}')
+    finally:
+        # Properly close all async resources
+        print("Cleaning up agent_simple resources...")
+        
+        # Close the project client
+        if hasattr(agent_simple, '_project_client'):
+            if hasattr(agent_simple._project_client, 'close'):
+                await agent_simple._project_client.close()
+        
+        # Close the chat_client
+        if hasattr(agent_simple, 'chat_client'):
+            if hasattr(agent_simple.chat_client, 'close'):
+                await agent_simple.chat_client.close()
+        
+        # Close the credential
+        if hasattr(agent_simple, '_credential'):
+            await agent_simple._credential.close()
 
-    print("\n\n" + "*"*80 + " RESPONSE #2")
-    print(response2) 
+    agent_full = await maf_aifoundry_agent_creation_full()
+    try:
+        response_full = await maf_agent_invocation(agent_full, question, streaming=True)
+        print(f'\n\n{"*"*80} RESPONSE FULL:\n{response_full}')
+    finally:
+        # Properly close all async resources
+        print("Cleaning up agent_full resources...")
+        
+        # Close the project client
+        if hasattr(agent_full, '_project_client'):
+            if hasattr(agent_full._project_client, 'close'):
+                await agent_full._project_client.close()
+        
+        # Close the chat_client
+        if hasattr(agent_full, 'chat_client'):
+            if hasattr(agent_full.chat_client, 'close'):
+                await agent_full.chat_client.close()
+        
+        # Close the credential
+        if hasattr(agent_full, '_credential'):
+            await agent_full._credential.close()
+
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main_async())
     print("Execution completed")
