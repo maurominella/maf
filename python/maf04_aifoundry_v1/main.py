@@ -4,10 +4,10 @@ from azure.identity.aio import AzureCliCredential
 import agent_framework
 from agent_framework import HostedCodeInterpreterTool
 
-async def maf_aifoundry_agent_creation_simple() -> agent_framework.ChatAgent:
+async def maf_aifoundry_agent_creation_simple(agent_name: str) -> agent_framework.ChatAgent:
     """Create an agent using Azure OpenAI Responses"""
     from agent_framework.azure import AzureAIAgentClient
-    global project_endpoint, agent_name, instructions, model_deployment_name
+    global project_endpoint, instructions, model_deployment_name
 
     # Store credential reference for cleanup
     credential = AzureCliCredential()
@@ -20,7 +20,8 @@ async def maf_aifoundry_agent_creation_simple() -> agent_framework.ChatAgent:
     agent = project_client.create_agent(
         agent_name=agent_name,
         instructions=instructions,
-        tools=[HostedCodeInterpreterTool()])
+        tools=[HostedCodeInterpreterTool()],
+        )
 
     # Store references for cleanup
     agent._credential = credential
@@ -28,13 +29,13 @@ async def maf_aifoundry_agent_creation_simple() -> agent_framework.ChatAgent:
     
     return agent
 
-async def maf_aifoundry_agent_creation_full() -> agent_framework.ChatAgent:
+async def maf_aifoundry_agent_creation_full(agent_name: str) -> agent_framework.ChatAgent:
     """Create an agent using Azure OpenAI Responses"""
 
     from azure.ai.projects.aio import AIProjectClient
     from agent_framework.azure import AzureAIAgentClient
 
-    global model_deployment_name, instructions, project_endpoint, agent_name
+    global model_deployment_name, instructions, project_endpoint
 
     # Store credential reference for cleanup
     credential = AzureCliCredential()
@@ -46,7 +47,9 @@ async def maf_aifoundry_agent_creation_full() -> agent_framework.ChatAgent:
     created_agent = await project_client.agents.create_agent(
         name = agent_name,
         model = model_deployment_name,
-        instructions= instructions)
+        instructions= instructions,
+        tools=[{"type": "code_interpreter"}],
+        )
     
     agent_client = AzureAIAgentClient(
         project_client=project_client,
@@ -54,7 +57,7 @@ async def maf_aifoundry_agent_creation_full() -> agent_framework.ChatAgent:
     
     agent = agent_framework.ChatAgent(
         chat_client=agent_client,
-        tools = [HostedCodeInterpreterTool()],
+        # tools = [HostedCodeInterpreterTool()], # not needed, tool is already configured in the agent
         store = True)
 
     # Store references for cleanup
@@ -66,7 +69,7 @@ async def maf_aifoundry_agent_creation_full() -> agent_framework.ChatAgent:
 
 async def maf_agent_invocation(agent: agent_framework.ChatAgent, question: str, streaming: bool=False) -> str:
     response = ""
-    print("Agent: ", end="", flush=True)
+    print("Agent answer: ", end="", flush=True)
     if streaming:
         stream = None
         try:
@@ -90,7 +93,7 @@ async def maf_agent_invocation(agent: agent_framework.ChatAgent, question: str, 
 
 async def main_async():
     """ Environment variables loading """
-    global project_endpoint, model_deployment_name, instructions, agent_name
+    global project_endpoint, model_deployment_name, instructions
 
     if not load_dotenv("./../../../config/credentials_my.env"):
         print("Environment variables not loaded, execution stopped")
@@ -104,7 +107,7 @@ async def main_async():
     project_endpoint=os.getenv("AIF_BAS_PROJECT_ENDPOINT")
     model_deployment_name = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME")
 
-    agent_simple = await maf_aifoundry_agent_creation_simple()
+    agent_simple = await maf_aifoundry_agent_creation_simple(agent_name=agent_name+"_simple")
     try:
         response_simple = await maf_agent_invocation(agent_simple, question, streaming=True)
         print(f'\n\n{"*"*80} RESPONSE SIMPLE:\n{response_simple}')
@@ -126,7 +129,7 @@ async def main_async():
         if hasattr(agent_simple, '_credential'):
             await agent_simple._credential.close()
 
-    agent_full = await maf_aifoundry_agent_creation_full()
+    agent_full = await maf_aifoundry_agent_creation_full(agent_name=agent_name+"_full")
     try:
         response_full = await maf_agent_invocation(agent_full, question, streaming=True)
         print(f'\n\n{"*"*80} RESPONSE FULL:\n{response_full}')

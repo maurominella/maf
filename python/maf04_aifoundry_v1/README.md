@@ -16,8 +16,12 @@ agent-framework-devui==1.0.0b251016
 ## What this sample does
 The code showcases two different approaches for creating AI agents that can execute Python code:
 
-1. **Simple Method** (`maf_aifoundry_agent_creation_simple`) - Streamlined approach for quick testing
-2. **Full Method** (`maf_aifoundry_agent_creation_full`) - Comprehensive approach with separated concerns
+1. **Simple Method** (`maf_aifoundry_agent_creation_simple`) 
+- Streamlined approach for quick testing.
+- It creates a local agent wrapper for convenience, no Foundry persistence, no visibility in Foundry UI.
+2. **Full Method** (`maf_aifoundry_agent_creation_full`)
+- Comprehensive approach with separated concerns.
+- It creates an actual agent in Azure AI Foundry, visible in UI, with proper persistence.
 
 Both methods create agents capable of executing Python code via the `HostedCodeInterpreterTool`.
 
