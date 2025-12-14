@@ -3,7 +3,7 @@
 ## Notes
 ⚠️ Important: This sample uses the V1 version of Microsoft Azure AI Foundry. For newer projects, consider using the latest version of Azure AI Foundry which may have different APIs and improved capabilities. Here are the libraries used here:
 ```
-python version 3.12.12
+python==3.12.12
 
 azure-ai-agents==1.2.0b5
 azure-ai-projects==1.0.0b12
