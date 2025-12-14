@@ -4,14 +4,71 @@ from azure.identity.aio import AzureCliCredential
 import agent_framework
 from agent_framework import HostedCodeInterpreterTool
 
+
+async def delete_all_agents_and_threads_async():
+    """Delete all agents and threads from Azure AI Foundry project"""
+    from azure.ai.projects.aio import AIProjectClient
+    from azure.identity.aio import AzureCliCredential
+
+    global project_endpoint, credential
+
+    # ask confirmation
+    confirmation = input(f"Are you sure you want to delete ALL agents and threads from the project at {project_endpoint}? (y/n): ")
+    if confirmation[0].lower() != "y":
+        print("Deletion cancelled.")
+        return
+    
+    project_client = AIProjectClient(
+        credential=credential,
+        endpoint=project_endpoint
+    )
+
+    try:
+        # Collect all thread IDs first
+        print("Fetching all threads...")
+        thread_ids = []
+        async for thread in project_client.agents.threads.list():
+            thread_ids.append(thread.id)
+
+        # Delete all threads
+        print(f"Fetching all the {len(thread_ids)} threads...")
+        threads = project_client.agents.threads
+        thread_count = 0
+        for thread_id in thread_ids:
+            try:
+                print(f"Deleting thread # {thread_count+1}/{len(thread_ids)}: {thread_id}...")
+                await project_client.agents.threads.delete(thread_id = thread_id)
+                thread_count += 1
+            except Exception as e:
+                print(f"Error deleting thread {thread_id}: {e}")
+        print(f"Total threads deleted: {thread_count}")
+        
+        # Delete all agents
+        print("\nFetching all agents...")
+        agents = project_client.agents.list_agents()
+        agent_count = 0
+        agents_ids = []
+        async for agent in agents:
+            agents_ids.append((agent.name,agent.id))
+
+        for agent_id in agents_ids:
+            try:
+                print(f"Deleting agent # {agent_count+1}/{len(agents_ids)}: {agent_id[0]} ({agent_id[1]})...")
+                await project_client.agents.delete_agent(agent_id[1])
+                agent_count += 1
+            except Exception as e:
+                print(f"Error deleting agent {agent_id[1]}: {e}")
+        print(f"Total agents deleted: {agent_count}")
+        
+    finally:
+        project_client.close()
+        print("\nCleanup completed!")
+
 async def maf_aifoundry_agent_creation_simple(agent_name: str) -> agent_framework.ChatAgent:
     """Create an agent using Azure OpenAI Responses"""
     from agent_framework.azure import AzureAIAgentClient
-    global project_endpoint, instructions, model_deployment_name
+    global project_endpoint, instructions, model_deployment_name, credential
 
-    # Store credential reference for cleanup
-    credential = AzureCliCredential()
-    
     project_client = AzureAIAgentClient(
         async_credential=credential,
         project_endpoint=project_endpoint,
@@ -35,11 +92,8 @@ async def maf_aifoundry_agent_creation_full(agent_name: str) -> agent_framework.
     from azure.ai.projects.aio import AIProjectClient
     from agent_framework.azure import AzureAIAgentClient
 
-    global model_deployment_name, instructions, project_endpoint
+    global model_deployment_name, instructions, project_endpoint, credential
 
-    # Store credential reference for cleanup
-    credential = AzureCliCredential()
-    
     project_client = AIProjectClient(
         credential=credential,
         endpoint=project_endpoint)
@@ -93,7 +147,7 @@ async def maf_agent_invocation(agent: agent_framework.ChatAgent, question: str, 
 
 async def main_async():
     """ Environment variables loading """
-    global project_endpoint, model_deployment_name, instructions
+    global project_endpoint, model_deployment_name, instructions, credential
 
     if not load_dotenv("./../../../config/credentials_my.env"):
         print("Environment variables not loaded, execution stopped")
@@ -106,10 +160,13 @@ async def main_async():
     agent_name = "HelperAgentPython"
     project_endpoint=os.getenv("AIF_BAS_PROJECT_ENDPOINT")
     model_deployment_name = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME")
+    credential = AzureCliCredential()
 
     agent_simple = await maf_aifoundry_agent_creation_simple(agent_name=agent_name+"_simple")
     try:
         response_simple = await maf_agent_invocation(agent_simple, question, streaming=True)
+        print(f'\n\n{"*"*80} RESPONSE SIMPLE:\n{response_simple}')
+        response_simple = await maf_agent_invocation(agent_simple, "what was my last question?", streaming=True)
         print(f'\n\n{"*"*80} RESPONSE SIMPLE:\n{response_simple}')
     finally:
         # Properly close all async resources
@@ -133,6 +190,8 @@ async def main_async():
     try:
         response_full = await maf_agent_invocation(agent_full, question, streaming=True)
         print(f'\n\n{"*"*80} RESPONSE FULL:\n{response_full}')
+        response_full = await maf_agent_invocation(agent_full, "what was my last question?", streaming=True)
+        print(f'\n\n{"*"*80} RESPONSE FULL:\n{response_full}')
     finally:
         # Properly close all async resources
         print("Cleaning up agent_full resources...")
@@ -151,7 +210,9 @@ async def main_async():
         if hasattr(agent_full, '_credential'):
             await agent_full._credential.close()
 
+    await delete_all_agents_and_threads_async()
 
-if __name__ == "__main__":
+
+if __name__ == "__main__":    
     asyncio.run(main_async())
     print("Execution completed")
