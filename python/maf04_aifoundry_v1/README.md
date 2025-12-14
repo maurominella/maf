@@ -80,8 +80,8 @@ This ensures no resource leaks and proper connection management.
 ## Usage
 ### Variables
 Set up environment variables in `credentials_my.env`:
-- AIF_BAS_PROJECT_ENDPOINT - Your Azure AI Foundry project endpoint
-- AZURE_OPENAI_CHAT_DEPLOYMENT_NAME - Your Azure OpenAI deployment name
+- `AIF_BAS_PROJECT_ENDPOINT` - Your Azure AI Foundry project endpoint
+- `AZURE_OPENAI_CHAT_DEPLOYMENT_NAME` - Your Azure OpenAI deployment name
 
 ### UV Installation
 - On Linux / MAC --> `curl -LsSf https://astral.sh/uv/install.sh | sh`
