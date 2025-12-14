@@ -3,21 +3,6 @@
 ## Notes
 ⚠️ Important: This sample uses the V1 version of Microsoft Azure AI Foundry. For newer projects, consider using the latest version of Azure AI Foundry which may have different APIs and improved capabilities.
 
-## UV Installation
-- On Linux / MAC --> `curl -LsSf https://astral.sh/uv/install.sh | sh`
-- On Windows --> `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
-
-## Steps
-- *CD* into the folder
-- Create the environment: `uv init . --python 3.12`.
-- Add libraries (bad method): `uv add python-dotenv azure-ai-agents==1.2.0b5 azure-ai-projects==1.0.0b12 azure-ai-inference==1.0.0b9agent-framework-core==1.0.0b251016 agent-framework-azure-ai==1.0.0b251016 agent-framework-devui==1.0.0b251016 jupyter --prerelease=allow`.
-- Add libraries (better method): `uv add $(cat requirements.txt) --prerelease=allow`.
-- Syncrhonize to create the file structure: `uv sync --prerelease=allow`.
-- Activate the environment:
-  - on Linux/MC --> `source .venv/bin/activate`.
-  - on Windows --> `.venv\Scripts\activate.ps1`.
-- To deactivate --> `deactivate`.
-
 ## What this sample does
 The code showcases two different approaches for creating AI agents that can execute Python code:
 
@@ -49,11 +34,11 @@ agent = project_client.create_agent(
     tools=[HostedCodeInterpreterTool()])
 ```
 
-### 2. Full Agent Creation (maf_aifoundry_agent_creation_full)
+### 2. Full Agent Creation (`maf_aifoundry_agent_creation_full`)
 This method provides a comprehensive approach with separated concerns:
 
 - **`AIProjectClient`** - Establishes connection to the Azure AI Project
-project_client.agents.create_agent - Creates the underlying agent resource
+- **`project_client.agents.create_agent`** - Creates the underlying agent resource
 - **`AzureAIAgentClient`** - Wraps the created agent for client operations
 - **`ChatAgent`** - Configures the agent with tools and conversation store
 
@@ -90,6 +75,28 @@ The code implements proper async resource cleanup for:
 - Project clients
 - Chat clients
 This ensures no resource leaks and proper connection management.
+
+
+## Usage
+### Variables
+Set up environment variables in `credentials_my.env`:
+- AIF_BAS_PROJECT_ENDPOINT - Your Azure AI Foundry project endpoint
+- AZURE_OPENAI_CHAT_DEPLOYMENT_NAME - Your Azure OpenAI deployment name
+
+### UV Installation
+- On Linux / MAC --> `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- On Windows --> `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+
+### Environment preparation
+- *CD* into the folder
+- Create the environment: `uv init . --python 3.12`.
+- Add libraries (bad method): `uv add python-dotenv azure-ai-agents==1.2.0b5 azure-ai-projects==1.0.0b12 azure-ai-inference==1.0.0b9agent-framework-core==1.0.0b251016 agent-framework-azure-ai==1.0.0b251016 agent-framework-devui==1.0.0b251016 jupyter --prerelease=allow`.
+- Add libraries (better method): `uv add $(cat requirements.txt) --prerelease=allow`.
+- Syncrhonize to create the file structure: `uv sync --prerelease=allow`.
+- Activate the environment:
+  - on Linux/MC --> `source .venv/bin/activate`.
+  - on Windows --> `.venv\Scripts\activate.ps1`.
+- To deactivate --> `deactivate`.
 
 ## Reference docs
 - [Azure AI Foundry Agents](https://learn.microsoft.com/en-us/agent-framework/user-guide/agents/agent-types/azure-ai-foundry-agent?pivots=programming-language-python)
