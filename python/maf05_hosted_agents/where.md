@@ -1,0 +1,3 @@
+- Microsoft Learn: https://learn.microsoft.com/en-us/azure/ai-foundry/agents/concepts/hosted-agents?view=foundry
+- Hosted agents (python): https://github.com/azure-ai-foundry/foundry-samples/tree/main/samples/python/hosted-agents
+- echo agent: - https://github.com/azure-ai-foundry/foundry-samples/tree/main/samples/python/hosted-agents/echo-agent
