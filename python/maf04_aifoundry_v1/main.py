@@ -164,7 +164,7 @@ async def main_async():
 
     agent_simple = await maf_aifoundry_agent_creation_simple(agent_name=agent_name+"_simple")
     try:
-        response_simple = await maf_agent_invocation(agent_simple, question, streaming=True)
+        response_simple = await maf_agent_invocation(agent_simple, question, streaming=False)
         print(f'\n\n{"*"*80} RESPONSE SIMPLE:\n{response_simple}')
         response_simple = await maf_agent_invocation(agent_simple, "what was my last question?", streaming=True)
         print(f'\n\n{"*"*80} RESPONSE SIMPLE:\n{response_simple}')
@@ -188,7 +188,7 @@ async def main_async():
 
     agent_full = await maf_aifoundry_agent_creation_full(agent_name=agent_name+"_full")
     try:
-        response_full = await maf_agent_invocation(agent_full, question, streaming=True)
+        response_full = await maf_agent_invocation(agent_full, question, streaming=False)
         print(f'\n\n{"*"*80} RESPONSE FULL:\n{response_full}')
         response_full = await maf_agent_invocation(agent_full, "what was my last question?", streaming=True)
         print(f'\n\n{"*"*80} RESPONSE FULL:\n{response_full}')

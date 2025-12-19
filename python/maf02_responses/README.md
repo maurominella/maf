@@ -5,10 +5,12 @@
 - On Windows --> `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
 
 ## Steps
-- Create the environment: `uv init maf02_responses --python 3.12`.
-- Move into the folder that is automatically created: `cd maf02_responses`.
-- Add libraries: `uv add agent-framework python-dotenv jupyter`.
-- Syncrhonize to create the file structure: `uv sync`.
+- ***CD*** into the folder
+- Create the environment: `uv init . --python 3.13`.
+- Add libraries: 
+  - automatically: `uv add $(cat requirements.txt) --prerelease=allow`.
+  - manually: `uv add agent-framework azure-ai-projects>=2.0.0b1 azure-identity python-dotenv --prerelease=allow`.
+- Syncrhonize to create the file structure: `uv sync --prerelease=allow`.
 - Activate the environment:
   - on Linux/MC --> `source .venv/bin/activate`.
   - on Windows --> `.\.venv\Scripts\activate.ps1`.
