@@ -16,6 +16,11 @@
   - On Windows: `.\.venv\Scripts\activate.ps1`
 - To deactivate: `deactivate`
 
+
+## Create a hosted agend by using the Azure Developer CLI
+If you have an existing Foundry project where you want to deploy your agent, and you want to provision only the additional resources that you might need for deploying your agent, run this command afterward:
+```azd ai agent init --project-id /subscriptions/eca2eddb-0f0c-4351-a634-52751499eeea/resourceGroups/aifv2-08-std-rg/providers/Microsoft.CognitiveServices/accounts/aifv2-08-std-foundry/projects/aifv2-08-std-foundryproj01-default```
+
 ## What This Sample Does
 It uses the **Microsoft Agent Framework** to create the instance of EchoAgent class that derives from the `BaseAgent`.
 The EchoAgent class implements two methods:
