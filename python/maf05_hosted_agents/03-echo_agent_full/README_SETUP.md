@@ -16,6 +16,34 @@
   - On Windows: `.\.venv\Scripts\activate.ps1`
 - To deactivate: `deactivate`
 
+# ISTRUZIONI
+Processo Corretto From Scratch
+Quando hai GIÀ agent.yaml (il tuo caso):
+1. Comando da eseguire:
+
+`azd ai agent init -m agent.yaml --project-id /subscriptions/eca2eddb-0f0c-4351-a634-52751499eeea/resourceGroups/aifv2-08-std-rg/providers/Microsoft.CognitiveServices/accounts/aifv2-08-std-foundry/projects/aifv2-08-std-foundryproj01-default`
+
+
+Nota: l'opzione -m agent.yaml dice ad azd di usare il tuo file agent.yaml esistente invece di generarne uno automatico.
+
+2. Questo creerà:
+
+azure.yaml - con la configurazione specifica per hosted agent (non generica container app)
+.azure - con le configurazioni environment
+3. Deploy:
+
+Differenze tra i Comandi
+Comando	Quando usarlo	Cosa fa
+azd ai agent init --project-id ...	NON hai agent.yaml	Genera tutto automaticamente, configurazione generica
+azd ai agent init -m [agent.yaml](http://_vscodecontentref_/6) --project-id ...	HAI GIÀ agent.yaml	Usa la tua definizione, configurazione specifica per agent
+azd init -t https://github.com/...	NON hai niente	Scarica template + crea risorse Azure
+Cosa Fare ORA
+Dato che hai già eseguito il comando sbagliato, ti consiglio:
+
+Cancella l'azure.yaml attuale e la cartella .azure
+Ri-esegui il comando corretto con -m agent.yaml
+Vuoi che ti guidi in questi passaggi? (Aspetto il tuo permesso prima di eseguire qualsiasi comando)
+
 
 ## Create a hosted agend by using the Azure Developer CLI
 If you have an existing Foundry project where you want to deploy your agent, and you want to provision only the additional resources that you might need for deploying your agent, run this command afterward:
