@@ -1,4 +1,4 @@
-# Azure Simplest Possible MAF Agent to be Published as Hosted Agent
+# EchoAgent to be Published as Hosted Agent
 
 ## UV Installation
 - On Linux / macOS: `curl -LsSf https://astral.sh/uv/install.sh | sh`
@@ -17,11 +17,11 @@
 - To deactivate: `deactivate`
 
 ## What This Sample Does
-It uses the **Microsoft Agent Framework** to create an agent that relies on the Azure OpenAI Responses service:
-1. Creates the client **AzureOpenAIResponsesClient** to connect to an Azure OpenAI endpoint (e.g., `https://my-azure-openai-resource.openai.azure.com/`) that is [responses-API enabled](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/responses?view=foundry-classic&tabs=python-key)
-2. Uses the client to create the agent
-3. Tests the agent with a simple query
-4. Exposes the agent through an API using the `from_agent_framework` function from the **azure-ai-agentserver-agentframework** package
+It uses the **Microsoft Agent Framework** to create the instance of EchoAgent class that derives from the `BaseAgent`.
+The EchoAgent class implements two methods:
+- **Init**, that initializes the class and adds the internal member `echo_prefix` 
+- **Run**, which receives a `string` or a `ChatMessage` -or a list of them-, invokes the agent and returns an `AgentRunResponse` object with the answer
+
 
 ## Required Environment Variables
 
@@ -54,11 +54,61 @@ These are only needed when deploying to Azure AI Foundry V2 (automatically set b
 Use a REST client (e.g., VS Code REST extension) to test the endpoint:
 
 ```http
-@baseUrl = http://localhost:8088
-
-POST {{baseUrl}}/responses
+POST http://localhost:8088/responses
 Content-Type: application/json
- 
+
+{   
+   "input": "Where is Seattle?"
+}
+```
+
+Possible output:
+```
+HTTP/1.1 200 OK
+date: Fri, 19 Dec 2025 19:38:22 GMT
+server: uvicorn
+content-length: 713
+content-type: application/json
+connection: close
+
 {
-    "input": "Where is Seattle?"
+  "object": "response",
+  "metadata": {},
+  "agent": null,
+  "conversation": {
+    "id": "conv_GvvFmvFIjNw1XrepTkCNuRV7IKP6kM7CcRy7lKECdwDjtXjSxc"
+  },
+  "type": "message",
+  "role": "assistant",
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "user": "",
+  "id": "resp_n4hnpuDanv4fObemwdIbevKhOHX811jMQ5FvOaqBgkQkXUgnAd",
+  "created_at": 1766173102,
+  "output": [
+    {
+      "id": "msg_GvvFmvFIjNw1XrepTkiNIeHml4IzcmAA1pJEaM3WjT4LfUjGLY",
+      "type": "message",
+      "status": "completed",
+      "role": "assistant",
+      "content": [
+        {
+          "type": "output_text",
+          "text": "🔊 Echo: Where is Seattle?",
+          "annotations": [],
+          "logprobs": []
+        }
+      ],
+      "created_by": {
+        "agent": {
+          "type": "agent_id",
+          "name": "",
+          "version": ""
+        },
+        "response_id": "resp_n4hnpuDanv4fObemwdIbevKhOHX811jMQ5FvOaqBgkQkXUgnAd"
+      }
+    }
+  ],
+  "parallel_tool_calls": true,
+  "status": "completed"
 }

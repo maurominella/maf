@@ -1,20 +1,27 @@
-import asyncio
-from dotenv import load_dotenv
-
-
-from azure.ai.agentserver.agentframework import from_agent_framework
+import os, asyncio
 
 from agent_framework import (
-    BaseAgent,
-    ChatMessage,
-    TextContent,
-    Role,
     AgentThread,
     AgentRunResponse,
-)
+    BaseAgent,
+    ChatMessage,
+    Role,
+    TextContent,)
 
 from typing import Any
+from azure.ai.agentserver.agentframework import from_agent_framework
+from dotenv import load_dotenv  # tested python-dotenv=1.2.1
 
+if not load_dotenv("./../../../../config/credentials_my.env"):
+    print("Environment variables not loaded, execution stopped")
+    exit()
+else:
+    print("Environment variables have been loaded ;-)")
+
+os.environ["AZURE_AI_PROJECT_ENDPOINT"] = os.getenv("AIF_STD_PROJECTV2_ENDPOINT")
+os.environ["AZURE_SUBSCRIPTION_ID"] = os.getenv("AZURE_SUBSCRIPTION_ID")
+os.environ["AZURE_RESOURCE_GROUP_NAME"] = "aifv2-08-std-rg"
+os.environ["AZURE_AI_PROJECT_NAME"] = "aifv2-08-std-foundryproj01-default"
 
 class EchoAgent(BaseAgent):
     """A simple custom agent that echoes user messages with a prefix.
@@ -40,7 +47,6 @@ class EchoAgent(BaseAgent):
             **kwargs: Additional keyword arguments passed to BaseAgent.
         """
         self.echo_prefix = echo_prefix
-
         super().__init__(
             name=name,
             description=description,
@@ -88,17 +94,16 @@ class EchoAgent(BaseAgent):
 
         return AgentRunResponse(messages=[response_message])
     
+
 def create_agent() -> EchoAgent:
     agent = EchoAgent(
         name="EchoBot", description="A simple agent that echoes messages with a prefix", echo_prefix="🔊 Echo: "
     )
     return agent
 
-def main():
-    print("Hello from maf05-hosted-agents-echo!")
-    from_agent_framework(lambda _: create_agent()).run()
-
 
 if __name__ == "__main__":
-    load_dotenv()
-    main()
+    agent = create_agent()
+    result = asyncio.run(agent.run(messages="Hello, EchoBot!"))
+    print(result.text)
+    from_agent_framework(lambda _: create_agent()).run()

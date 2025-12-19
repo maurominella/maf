@@ -1,0 +1,3 @@
+agent_framework==1.0.0b251218
+azure-ai-agentserver-agentframework==1.0.0b7
+python-dotenv==1.2.1
