@@ -13,8 +13,8 @@ else:
 
 os.environ["AZURE_AI_PROJECT_ENDPOINT"] = os.getenv("AIF_STD_PROJECTV2_ENDPOINT")
 os.environ["AZURE_SUBSCRIPTION_ID"] = os.getenv("AZURE_SUBSCRIPTION_ID")
-os.environ["AZURE_RESOURCE_GROUP_NAME"] = "aifv2-08-std-rg"
-os.environ["AZURE_AI_PROJECT_NAME"] = "aifv2-08-std-foundryproj01-default"
+os.environ["AZURE_RESOURCE_GROUP_NAME"] = os.getenv("AIF_STD_PROJECTV2_RESOURCE_GROUP_NAME")
+os.environ["AZURE_AI_PROJECT_NAME"] = os.environ["AZURE_AI_PROJECT_ENDPOINT"].split("/")[-1]
 
 
 def create_agent():    
