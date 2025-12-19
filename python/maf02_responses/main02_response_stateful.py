@@ -25,7 +25,7 @@ def main():
     # Second turn: reuse previous response ID to maintain context
     resp2 = client.responses.create(
         model=os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"),
-        previous_response_id=resp1.id,  # Passa l'ID della risposta precedente
+        previous_response_id=resp1.id,  # Previous answer ID
         input=[{"role": "user", "content": "What was my previous question?"}]
     )
     print(resp2.output[0].content[0].text)
