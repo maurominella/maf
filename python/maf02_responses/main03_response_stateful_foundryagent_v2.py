@@ -24,20 +24,27 @@ def main():
     # Get the OpenAI client from the project (this handles API versions correctly)
     openai_response_client = project_client.get_openai_client()
 
-    # First turn, normal question
+    # First turn, normal question without using the AI Foundry agent
     resp1 = openai_response_client.responses.create(
-        input = "How is the weather like in Paris?", # [{"role": "user", "content": "How is the weather like in Paris?"}],
-        extra_body={"agent": {"name": agent_name, "type": "agent_reference"}}  # Specify the agent to use
+        input = "Tell me the name of a not-too-famous Capital city. Just the name, please.", # [{"role": "user", "content": "Tell me the name of a Capital city"}],
+        model = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME")  # Use the chat model deployment name
     )
     print(f"First response: {resp1.output_text}\n")
 
-    # Second turn: reuse previous response ID to maintain context
+    # Second turn, a question that expects the agent to be used, with a tool providing web search capability
     resp2 = openai_response_client.responses.create(
-        previous_response_id = resp1.id,  # Passa l'ID della risposta precedente
+        input = f"How is the weather like in {resp1.output_text}?", # [{"role": "user", "content": "How is the weather like in Paris?"}],
+        extra_body={"agent": {"name": agent_name, "type": "agent_reference"}}  # Specify the agent to use
+    )
+    print(f"Second response: {resp2.output_text}\n")
+
+    # Third turn: reuse previous response ID to maintain context
+    resp3 = openai_response_client.responses.create(
+        previous_response_id = resp2.id,  # Passa l'ID della risposta precedente
         input = "What was my previous question?", # [{"role": "user", "content": "What was my previous question?"}],
         extra_body = {"agent": {"name": agent_name, "type": "agent_reference"}}  # Specify the agent to use
     )
-    print(f"Second response: {resp2.output_text}\n")
+    print(f"Third response: {resp3.output_text}\n")
 
 if __name__ == "__main__":
     main()
