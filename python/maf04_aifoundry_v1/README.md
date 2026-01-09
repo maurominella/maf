@@ -13,21 +13,49 @@ agent-framework-azure-ai==1.0.0b251016
 agent-framework-devui==1.0.0b251016
 ```
 
+## Creating a Foundry V1 Agent in Python
+
+This repository demonstrates two different approaches for creating a Foundry V1 agent using Python. Both approaches ultimately return an `agent_framework.ChatAgent`, but they differ in abstraction level, flexibility, and alignment with the Foundry V1 service model.
+
+---
+
+
 ## What this sample does
 The code showcases two different approaches for creating AI agents that can execute Python code:
 
-1. **Simple Method** (`maf_aifoundry_agent_creation_simple`) 
-- Streamlined approach for quick testing.
-- It creates a local agent wrapper for convenience, no Foundry persistence, no visibility in Foundry UI.
-2. **Full Method** (`maf_aifoundry_agent_creation_full`)
-- Comprehensive approach with separated concerns.
-- It creates an actual agent in Azure AI Foundry, visible in UI, with proper persistence.
+## 1. **Ephemeral Agent** (`maf_aifoundry_agent_creation_ephemeral`) 
+The **simple approach** uses `AzureAIAgentClient` as an all‑in‑one interface.  
+It handles both the creation and the interaction with the agent in a single step.
 
-Both methods create agents capable of executing Python code via the `HostedCodeInterpreterTool`.
+**Key characteristics:**
+- Minimal setup
+- Ideal for prototypes, quick demos, and lightweight scenarios
+- Tools (e.g., `HostedCodeInterpreterTool`) are configured
+<br/>
+When you call:
+```
+AzureAIAgentClient.create_agent(...)
+```
+, you are not creating a persistent Foundry V1 agent in the project.
+Instead, you are creating an ***ephemeral*** (non‑persistent) agent that exists only within the client session.
+
+What “ephemeral” means:
+The agent is not registered in the Foundry project.
+- It does not appear in the list of agents.
+- It is created on demand the first time you use it (e.g., when you send a message).
+- It is automatically cleaned up when the session ends.
+- It has no lifecycle management (no delete, no update, no reuse).
+
+#### Why you only see it after using it
+The agent is not actually instantiated on the service when you call create_agent().
+The real creation happens lazily, at the moment of the first chat request.
+
+At that point, the runtime allocates a temporary execution context to handle your message.
+This temporary agent may appear briefly in the portal, but it is not a real Foundry V1 agent and **disappears automatically**.
 
 ## Implementation Details
 
-### 1. Simple Agent Creation (`maf_aifoundry_agent_creation_simple`)
+### 1.1 Simple Agent Creation (`maf_aifoundry_agent_creation_simple`)
 
 This method provides a **streamlined two-call approach** ideal for quick tests and prototyping:
 
@@ -48,9 +76,8 @@ agent = project_client.create_agent(
     tools=[HostedCodeInterpreterTool()])
 ```
 
-### 2. Full Agent Creation (`maf_aifoundry_agent_creation_full`)
+### 1.2 Full Agent Creation  (`maf_aifoundry_agent_creation_full`)
 This method provides a comprehensive approach with separated concerns:
-
 - **`AIProjectClient`** - Establishes connection to the Azure AI Project
 - **`project_client.agents.create_agent`** - Creates the underlying agent resource
 - **`AzureAIAgentClient`** - Wraps the created agent for client operations
@@ -77,7 +104,7 @@ agent = agent_framework.ChatAgent(
     store=True)
 ```
 
-### Key Features
+## 2.0 Key Features
 - Agent Invocation
 The maf_agent_invocation function supports both streaming and non-streaming responses:
 

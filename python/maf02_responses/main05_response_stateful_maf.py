@@ -14,7 +14,7 @@ def maf_responsesai_agent_creation() -> agent_framework.ChatAgent:
         credential=AzureCliCredential(),
         endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
         deployment_name = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"),
-        api_version = os.getenv("AZURE_OPENAI_RESPONSES_API_VERSION"), # v1
+        api_version = os.getenv("AZURE_OPENAI_FOR_RESPONSES_API_VERSION"), # v1
     )
 
     # Then, create the agent
@@ -56,6 +56,8 @@ async def maf_agent_invocation(
         print(result.text)        
         response_id = result.response_id
         response = result.text
+
+    print("\n\n")
     
     return response, result_thread
         

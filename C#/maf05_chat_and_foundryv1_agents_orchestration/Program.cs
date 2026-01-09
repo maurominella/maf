@@ -2,7 +2,7 @@ using Azure.AI.Agents.Persistent;
 using Microsoft.Agents.AI.Workflows;
 
 #region Setup environment variables
-var aiFoundryProjectEndpoint = Environment.GetEnvironmentVariable("AIF_STD_PROJECT_ENDPOINT"!);
+var aiFoundryProjectEndpoint = Environment.GetEnvironmentVariable("AIF_STD_PROJECT_ENDPOINT"!); // you can check with Get-ChildItem Env:, you can set with $Env:AIF_STD_PROJECT_ENDPOINT="https://your-endpoint"
 var openAIEndpoint = "https://models.github.ai/inference";
 var openAIDeploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
 var aiFoundryDeploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
@@ -57,7 +57,8 @@ await foreach (var responseChunk in mafAgentWorkflow.RunStreamingAsync("Never mi
 // await aiFoundryMafAgentAnimalPicker.ChatClient.Administration.DeleteAgentAsync(aiFoundryMafAgentAnimalPicker.Id);
 #endregion
 
-Console.WriteLine("\nDone.");
+Console.WriteLine("\nProgram ends here. Press any key to exit.");
+Console.ReadKey();
 
 // Helper function to read the agent's instructions based on its name
 static async Task<string> ReadAgentInstructionsAsync(string agent_name)

@@ -6,6 +6,8 @@ using Microsoft.Extensions.AI;
 using OpenAI;
 using OpenAI.Chat;
 
+var question = "Write a short story about a haunted house.";
+
 var cc = new OpenAI.Chat.ChatClient("gpt-4o-mini",
  new ApiKeyCredential(Environment.GetEnvironmentVariable("GITHUB_TOKEN")!),
  new OpenAIClientOptions { Endpoint = new Uri("https://models.github.ai/inference") });
@@ -16,8 +18,8 @@ ChatCompletion response_openAI = (await cc.CompleteChatAsync("Hi there!")).Value
 // Read the model's reply
 Console.WriteLine(response_openAI.Content[0].Text);
 
-var question = "Write a short story about a haunted house.";
 
+// Adapt to IChatClient
 IChatClient cc_adapter = cc.AsIChatClient();
 
 // Writer agent
@@ -40,6 +42,5 @@ AgentRunResponse response = await translator.RunAsync(story.Text);
 
 Console.WriteLine(response.Text);
 
-
-
-Console.WriteLine("\nHello, World!");
+Console.WriteLine("\nProgram has completed. Press any key to exit.");
+Console.ReadKey();

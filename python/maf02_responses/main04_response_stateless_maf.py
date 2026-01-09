@@ -18,7 +18,7 @@ async def main_async():
         credential=AzureCliCredential(),
         endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
         deployment_name = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"),
-        api_version = os.getenv("AZURE_OPENAI_RESPONSES_API_VERSION"), # v1
+        api_version = os.getenv("AZURE_OPENAI_FOR_RESPONSES_API_VERSION"), # v1
     )
 
     # Then, create the agent

@@ -4,6 +4,7 @@ using Azure.Identity;
 using Microsoft.Agents.AI;
 using Azure.AI.Projects;
 using Microsoft.Agents.AI.Workflows;
+using Microsoft.Extensions.AI;
 
 var projectEndpoint = Environment.GetEnvironmentVariable("AIF_BASPROJECT_ENDPOINT")!;
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
@@ -45,12 +46,14 @@ Console.WriteLine(await agent2.RunAsync(
    answerAgent1.Text, threadAgent2));
 #endregion
 
-#region Create a volatile workflow with the two agents
-Workflow volatileWorkflow =
+#region Create a volatile workflow - linear pipeline with the two agents
+// Create workflow in Foundry. Please note that the workflow is NOT persisted in Foundry
+// Build the workflow as a linear sequence of agents
+Workflow volatileWorkflow1 =
     AgentWorkflowBuilder
         .BuildSequential(agent1, agent2);
 
-AIAgent workflowAgent = volatileWorkflow.AsAgent();
+AIAgent workflowAgent = volatileWorkflow1.AsAgent();
 
 AgentThread threadwfAgent = workflowAgent.GetNewThread();
 Console.WriteLine(await workflowAgent.RunAsync(
@@ -58,16 +61,25 @@ Console.WriteLine(await workflowAgent.RunAsync(
 #endregion
 
 
-#region Create a persistent workflow with the two agents
-
-
-
-// Create workflow in Foundry
+#region Create a volatile workflow - explicit and composable API, ideal for complex workflows and higher control
+// Create workflow in Foundry. Please note that the workflow is NOT persisted in Foundry
 // Build the workflow by adding executors and connecting them
-var persistentWorkflow = new WorkflowBuilder(agent1)
+var volatileWorkflow2 = new WorkflowBuilder(agent1)
     .AddEdge(agent1, agent2)
-    .AddEdge(agent2, agent1)
     .Build();
+
+// Streaming execution (TurnToken pattern)
+await using var run = await InProcessExecution.StreamAsync(
+    volatileWorkflow2, new ChatMessage(ChatRole.User, "Tell me a joke about a pirate."));
+await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
+
+await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
+{
+    if (evt is AgentRunUpdateEvent update)
+    {
+        Console.Write($"{update.Data}");
+    }
+}
 #endregion
 
 #region Teardown
@@ -88,4 +100,5 @@ else
 }
 #endregion
 
-Console.WriteLine("Agents created successfully.");
+Console.WriteLine("Program has ended successfully. Press any key to exit.");
+Console.ReadKey();

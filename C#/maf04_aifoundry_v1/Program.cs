@@ -24,13 +24,13 @@ var persistentAgentsClient = new PersistentAgentsClient(
 
 #region Create persistent agent #1 V1 - in two steps
 // First, create the agent in AI Foundry as a PersistentAgent object
-var agentMetadata = await persistentAgentsClient.Administration.CreateAgentAsync(
+var agent1Metadata = await persistentAgentsClient.Administration.CreateAgentAsync(
     model: deploymentName,
     name: agent1V1Name,
     instructions: agentInstructionsV1);
 
 // Secondly, retrieve as an AIAgent the agent that was just created using its ID
-AIAgent agent1V1 = await persistentAgentsClient.GetAIAgentAsync(agentMetadata.Value.Id);
+AIAgent agent1V1 = await persistentAgentsClient.GetAIAgentAsync(agent1Metadata.Value.Id);
 #endregion
 
 #region Create persistent agent #2 V1 in a single step
@@ -45,5 +45,7 @@ AIAgent agent2V1 = await persistentAgentsClient.CreateAIAgentAsync(
 AIAgent agent3V1 = await persistentAgentsClient.GetAIAgentAsync(agent2V1.Id);
 #endregion
 
-// Invoke the agent and output the text result.
+// Invoke the agents and output the text result.
+Console.WriteLine(await agent1V1.RunAsync("Tell me a joke about a pirate."));
+Console.WriteLine(await agent2V1.RunAsync("Tell me a joke about a pirate."));
 Console.WriteLine(await agent3V1.RunAsync("Tell me a joke about a pirate."));

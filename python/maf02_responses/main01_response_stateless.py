@@ -18,10 +18,10 @@ def main():
 
     response = client.responses.create(
         model=os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"),
-        input=[{"role": "user", "content": "Hello!"}],
+        input="Hello!", # or [{"role": "user", "content": "Hello!"}],
     )
 
-    print(response.output[0].content[0].text)
+    print(response.output_text) # or print(response.output[0].content[0].text)
     
     
 if __name__ == "__main__":

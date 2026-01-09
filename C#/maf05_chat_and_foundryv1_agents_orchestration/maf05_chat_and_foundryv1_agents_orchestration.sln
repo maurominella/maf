@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "maf05_aifoundry_v1", "maf05_aifoundry_v1.csproj", "{D86CCD88-7D91-4AA4-C14D-322054E252E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "maf05_chat_and_foundryv1_agents_orchestration", "maf05_chat_and_foundryv1_agents_orchestration.csproj", "{D86CCD88-7D91-4AA4-C14D-322054E252E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

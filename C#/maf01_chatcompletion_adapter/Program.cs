@@ -6,6 +6,7 @@ using Microsoft.Extensions.AI;
 using OpenAI;
 using OpenAI.Chat;
 
+var question = "Write a short story about a haunted house.";
 
 var cc = new OpenAI.Chat.ChatClient("gpt-4o-mini",
  new ApiKeyCredential(Environment.GetEnvironmentVariable("GITHUB_TOKEN")!),
@@ -13,10 +14,13 @@ var cc = new OpenAI.Chat.ChatClient("gpt-4o-mini",
 
 
 // Send a chat request using the vendor-specific client
-ChatCompletion response_openAI = (await cc.CompleteChatAsync("Hi there!")).Value;
+ChatCompletion response_openAI = (await cc.CompleteChatAsync(question)).Value;
 
 // Read the model's reply
 Console.WriteLine(response_openAI.Content[0].Text);
+
+
+Console.WriteLine("\n\n\n\n*************\n\n\n\n\n");
 
 IChatClient cc_adapter = cc.AsIChatClient();
 
@@ -26,7 +30,8 @@ AIAgent writer = new ChatClientAgent(
     instructions: "You are a helpful writing assistant."
 );
 
-var question = "Write a short story about a haunted house.";
+// add a few empty lines before the next output for clarity
+
 
 AgentRunResponse response = await writer.RunAsync(question);
 Console.WriteLine(response.Text);
@@ -38,4 +43,4 @@ await foreach(var chunk in writer.RunStreamingAsync(question))
 }
 
 
-Console.WriteLine("Hello, World!");
+Console.WriteLine("\nThe program has ended!");

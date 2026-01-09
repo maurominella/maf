@@ -53,4 +53,5 @@ await foreach (var update in writerWithTools.RunStreamingAsync(question))
 }
 
 
-Console.WriteLine("\nHello, World!");
+Console.WriteLine("\nThe program has completed!. Please press any key to exit.");
+Console.ReadKey();

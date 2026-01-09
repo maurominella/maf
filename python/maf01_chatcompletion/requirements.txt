@@ -1,0 +1,7 @@
+python-dotenv
+azure-ai-agents==1.2.0b5
+azure-ai-projects==1.0.0b12
+azure-ai-inference==1.0.0b9
+agent-framework-core==1.0.0b251016
+agent-framework-azure-ai==1.0.0b251016
+agent-framework-devui==1.0.0b251016

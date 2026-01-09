@@ -19,16 +19,16 @@ def main():
     # First turn, normal question
     resp1 = client.responses.create(
         model=os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"),
-        input=[{"role": "user", "content": "Hello, how are you?"}]
+        input="Hello, how are you?" # or [{"role": "user", "content": "Hello, how are you?"}]
     )
 
     # Second turn: reuse previous response ID to maintain context
     resp2 = client.responses.create(
         model=os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"),
         previous_response_id=resp1.id,  # Previous answer ID
-        input=[{"role": "user", "content": "What was my previous question?"}]
+        input="What was my previous question?" # or [{"role": "user", "content": "What was my previous question?"}]
     )
-    print(resp2.output[0].content[0].text)
+    print(resp2.output_text) # or resp2.output[0].content[0].text
     
     
 if __name__ == "__main__":

@@ -64,8 +64,14 @@ async def delete_all_agents_and_threads_async():
         project_client.close()
         print("\nCleanup completed!")
 
-async def maf_aifoundry_agent_creation_simple(agent_name: str) -> agent_framework.ChatAgent:
-    """Create an agent using Azure OpenAI Responses"""
+async def maf_aifoundry_agent_creation_ephemeral(agent_name: str) -> agent_framework.ChatAgent:
+    """Create an "ephemeral" agent using Azure OpenAI Responses. What "ephemeral" means:
+- The agent is not registered in the Foundry project.
+- It does not appear in the list of agents.
+- It is created on demand the first time you use it (e.g., when you send a message).
+- It is automatically cleaned up when the session ends.
+- It has no lifecycle management (no delete, no update, no reuse)."""
+
     from agent_framework.azure import AzureAIAgentClient
     global project_endpoint, instructions, model_deployment_name, credential
 
@@ -75,7 +81,7 @@ async def maf_aifoundry_agent_creation_simple(agent_name: str) -> agent_framewor
         model_deployment_name = model_deployment_name)
 
     agent = project_client.create_agent(
-        agent_name=agent_name,
+        name=agent_name,
         instructions=instructions,
         tools=[HostedCodeInterpreterTool()],
         )
@@ -120,7 +126,6 @@ async def maf_aifoundry_agent_creation_full(agent_name: str) -> agent_framework.
     
     return agent
 
-
 async def maf_agent_invocation(agent: agent_framework.ChatAgent, question: str, streaming: bool=False) -> str:
     response = ""
     print("Agent answer: ", end="", flush=True)
@@ -143,8 +148,6 @@ async def maf_agent_invocation(agent: agent_framework.ChatAgent, question: str, 
         
     return response
 
-
-
 async def main_async():
     """ Environment variables loading """
     global project_endpoint, model_deployment_name, instructions, credential
@@ -162,7 +165,7 @@ async def main_async():
     model_deployment_name = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME")
     credential = AzureCliCredential()
 
-    agent_simple = await maf_aifoundry_agent_creation_simple(agent_name=agent_name+"_simple")
+    agent_simple = await maf_aifoundry_agent_creation_ephemeral(agent_name=agent_name+"_simple")
     try:
         response_simple = await maf_agent_invocation(agent_simple, question, streaming=False)
         print(f'\n\n{"*"*80} RESPONSE SIMPLE:\n{response_simple}')

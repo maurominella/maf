@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "maf05_aifoundry_v2_volatile_workflows", "maf05_aifoundry_v2_volatile_workflows.csproj", "{59D9703D-FFDD-D4AB-8AB8-8948E0E567AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "maf04_aifoundry_v2_volatile_workflows", "maf04_aifoundry_v2_volatile_workflows.csproj", "{59D9703D-FFDD-D4AB-8AB8-8948E0E567AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
