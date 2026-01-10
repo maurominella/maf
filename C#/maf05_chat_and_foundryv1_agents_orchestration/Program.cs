@@ -58,7 +58,7 @@ await foreach (var responseChunk in mafAgentWorkflow.RunStreamingAsync("Never mi
 #endregion
 
 Console.WriteLine("\nProgram ends here. Press any key to exit.");
-Console.ReadKey();
+Console.ReadLine();
 
 // Helper function to read the agent's instructions based on its name
 static async Task<string> ReadAgentInstructionsAsync(string agent_name)
