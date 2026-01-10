@@ -100,5 +100,4 @@ else
 }
 #endregion
 
-Console.WriteLine("Program has ended successfully. Press any key to exit.");
-Console.ReadKey();
+Console.WriteLine("Program has ended successfully.");

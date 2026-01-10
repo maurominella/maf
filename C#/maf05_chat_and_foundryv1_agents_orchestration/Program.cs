@@ -57,8 +57,7 @@ await foreach (var responseChunk in mafAgentWorkflow.RunStreamingAsync("Never mi
 // await aiFoundryMafAgentAnimalPicker.ChatClient.Administration.DeleteAgentAsync(aiFoundryMafAgentAnimalPicker.Id);
 #endregion
 
-Console.WriteLine("\nProgram ends here. Press any key to exit.");
-Console.ReadLine();
+Console.WriteLine("\nProgram ends here.");
 
 // Helper function to read the agent's instructions based on its name
 static async Task<string> ReadAgentInstructionsAsync(string agent_name)

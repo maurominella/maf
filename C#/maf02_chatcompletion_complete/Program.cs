@@ -42,5 +42,4 @@ AgentRunResponse response = await translator.RunAsync(story.Text);
 
 Console.WriteLine(response.Text);
 
-Console.WriteLine("\nProgram has completed. Press any key to exit.");
-Console.ReadKey();
+Console.WriteLine("\nProgram has completed.");
