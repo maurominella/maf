@@ -33,15 +33,16 @@ def main():
 
     # Second turn, a question that expects the agent to be used, with a tool providing web search capability
     resp2 = openai_response_client.responses.create(
-        input = f"How is the weather like in {resp1.output_text}?", # [{"role": "user", "content": "How is the weather like in Paris?"}],
+        previous_response_id= resp1.id,  # Previous response ID to maintain context
+        input = f"How is the weather like in there, today?", # [{"role": "user", "content": "How is the weather like in Paris?"}],
         extra_body={"agent": {"name": agent_name, "type": "agent_reference"}}  # Specify the agent to use
     )
     print(f"Second response: {resp2.output_text}\n")
 
-    # Third turn: reuse previous response ID to maintain context
+    # Third turn: reuse second response ID to get the FIRST (not second) question from the user
     resp3 = openai_response_client.responses.create(
-        previous_response_id = resp2.id,  # Passa l'ID della risposta precedente
-        input = "What was my previous question?", # [{"role": "user", "content": "What was my previous question?"}],
+        previous_response_id = resp2.id,  # Previous response ID to maintain context
+        input = "How many and which questions have I just asked you?", # [{"role": "user", "content": "What was my initial question?"}],
         extra_body = {"agent": {"name": agent_name, "type": "agent_reference"}}  # Specify the agent to use
     )
     print(f"Third response: {resp3.output_text}\n")

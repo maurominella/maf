@@ -1,2 +1,3 @@
 # maf
-Microsoft Agent Framework Experiments
+Microsoft Agent Framework Experiments.
+Please refer to the README.md files in each subfolder.

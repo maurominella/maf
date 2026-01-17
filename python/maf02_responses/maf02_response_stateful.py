@@ -29,7 +29,14 @@ def main():
         input="What was my previous question?" # or [{"role": "user", "content": "What was my previous question?"}]
     )
     print(resp2.output_text) # or resp2.output[0].content[0].text
-    
+
+    # Third turn: reuse second response ID to access the first question
+    resp3 = client.responses.create(
+        model=os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME"),
+        previous_response_id=resp2.id,  # Previous answer ID
+        input="What was my initial question?" # or [{"role": "user", "content": "What was my previous question?"}]
+    )
+    print(resp3.output_text) # or resp3.output[0].content[0].text    
     
 if __name__ == "__main__":
     main()

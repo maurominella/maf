@@ -24,11 +24,11 @@ async def main_async():
     # Then, create the agent
     maf_openai_response_agent = openai_response_client.create_agent(
         name="HelpfulAssistant",
-        instructions="You are a helpful assistant that can write and execute Python code and execute it with n=10.", 
+        instructions="You are a helpful assistant that can write and execute Python code.", 
         tools=[agent_framework.HostedCodeInterpreterTool()],
     )
 
-    result = await maf_openai_response_agent.run("Write a Python function that returns the Fibonacci sequence up to n")
+    result = await maf_openai_response_agent.run("Write a Python function that returns the Fibonacci sequence up to 10 and execute it.")
     print(result.text)        
     
     
