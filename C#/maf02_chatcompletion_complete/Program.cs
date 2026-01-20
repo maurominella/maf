@@ -9,7 +9,7 @@ using OpenAI.Chat;
 var question = "Write a short story about a haunted house.";
 
 var cc = new OpenAI.Chat.ChatClient("gpt-4o-mini",
- new ApiKeyCredential(Environment.GetEnvironmentVariable("GITHUB_TOKEN")!),
+ new ApiKeyCredential(Environment.GetEnvironmentVariable("GITHUB_MODELS_PAT_CLASSIC")!),
  new OpenAIClientOptions { Endpoint = new Uri("https://models.github.ai/inference") });
 
  // Send a chat request using the vendor-specific client

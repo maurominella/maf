@@ -15,7 +15,7 @@ var openaiClient = new AzureOpenAIClient(
     new Uri(Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")!),
     new Azure.Identity.AzureCliCredential());
 
-var chatCompletionClient = openaiClient.GetChatClient("gpt-4.1");
+var chatCompletionClient = openaiClient.GetChatClient(Environment.GetEnvironmentVariable("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME") !);
 
 AIAgent writer = chatCompletionClient.CreateAIAgent(
     instructions: instructions,
@@ -27,7 +27,7 @@ Console.WriteLine(await writer.RunAsync(question));
 [Description("Provides the author of the story.")]
 string GetStoryAuthor() => "Mauro Minella";
 
-[Description("Provides the author of the story.")]
+[Description("Provides the the story with title and author.")]
 string FormatStory(string title, string author, string story) =>
     $"Story title: {title}\nAuthor: {author}\n\n{story}";
 #endregion
