@@ -1,4 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿﻿// See https://aka.ms/new-console-template for more information
 
 /*
 RETRIEVE variables in PowerShell:
@@ -22,19 +22,19 @@ DELETE variables in PowerShell:
 // create with <setx VARIABLE_NAME value>
 // delete with <Remove-ItemProperty -Path HKCU:\Environment -Name MyVariableName>
 
-
 using System.ClientModel;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using OpenAI;
+
+Console.WriteLine(Environment.GetEnvironmentVariable("GITHUB_MODELS_PAT_CLASSIC"));
 
 var question = "Write a short story about a haunted house.";
 var cc = new OpenAI.Chat.ChatClient("gpt-4o-mini",
     new ApiKeyCredential(Environment.GetEnvironmentVariable("GITHUB_MODELS_PAT_CLASSIC")!),
     new OpenAIClientOptions { Endpoint = new Uri("https://models.github.ai/inference") });
 
-
-// Send a chat request using the vendor-specific client
+    // Send a chat request using the vendor-specific client
 OpenAI.Chat.ChatCompletion response_openAI = (await cc.CompleteChatAsync(question)).Value;
 
 // Read the model's reply
@@ -51,7 +51,7 @@ AIAgent writer = new ChatClientAgent( // Agent Framework agent wrapping the chat
 );
 
 
-AgentRunResponse response = await writer.RunAsync(question);
+AgentResponse response = await writer.RunAsync(question);
 Console.WriteLine(response.Text);
 
 // This time we print the story with streaming
