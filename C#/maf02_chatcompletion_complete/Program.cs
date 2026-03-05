@@ -28,7 +28,7 @@ AIAgent writer = new ChatClientAgent(
     name: "Writer",
     instructions: "You are a helpful writing assistant."
 );
-AgentRunResponse story = await writer.RunAsync(question);
+AgentResponse story = await writer.RunAsync(question);
 Console.WriteLine(story.Text);
 
 
@@ -38,7 +38,7 @@ AIAgent translator = new ChatClientAgent(
     name: "Translator",
     instructions: "Translate the text to Italian."
 );
-AgentRunResponse response = await translator.RunAsync(story.Text);
+AgentResponse response = await translator.RunAsync(story.Text);
 
 Console.WriteLine(response.Text);
 
