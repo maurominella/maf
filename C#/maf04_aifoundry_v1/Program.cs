@@ -13,7 +13,7 @@ using Azure.Identity;
 const string agent1V1Name = "jokeragent1v1"; 
 const string agent2V1Name = "jokeragent2v1"; 
 const string agentInstructionsV1 = "You are good at telling jokes. You speak Italian only, even if the question is in another language.";
-var projectEndpoint = Environment.GetEnvironmentVariable("AIF_BASPROJECT_ENDPOINT")!;
+var projectEndpoint = Environment.GetEnvironmentVariable("AIF_BAS_PROJECT_ENDPOINT")!;
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
 #endregion
 

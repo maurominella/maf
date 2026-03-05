@@ -1,11 +1,11 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-
 using System.ComponentModel;
 using Azure.AI.OpenAI;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using OpenAI;
+using OpenAI.Chat;
 
 var question = "Write a short story about a haunted house, using no more than 100 words.";
 var instructions = "Write stories that are engaging and creative.";
@@ -17,7 +17,7 @@ var openaiClient = new AzureOpenAIClient(
 
 var chatCompletionClient = openaiClient.GetChatClient(Environment.GetEnvironmentVariable("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME") !);
 
-AIAgent writer = chatCompletionClient.CreateAIAgent(
+AIAgent writer = chatCompletionClient.AsAIAgent(
     instructions: instructions,
     name: "writer");
 
@@ -37,7 +37,7 @@ string FormatStory(string title, string author, string story) =>
 AIFunction aiFunctionGetStoryAuthor = AIFunctionFactory.Create(GetStoryAuthor);
 var aiFunctionFormatStory = AIFunctionFactory.Create(FormatStory);
 
-AIAgent writerWithTools = chatCompletionClient.CreateAIAgent(
+AIAgent writerWithTools = chatCompletionClient.AsAIAgent(
     instructions: instructionsToolsAware,
     name: "writer_with_tools",
     tools: [
