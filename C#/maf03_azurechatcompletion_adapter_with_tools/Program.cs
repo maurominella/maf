@@ -11,11 +11,11 @@ var question = "Write a short story about a haunted house, using no more than 10
 var instructions = "Write stories that are engaging and creative.";
 var instructionsToolsAware = "Write stories that are engaging and creative. For each story, please include all its possible details taken from the provided tools.";
 
-var openaiClient = new AzureOpenAIClient(
+var azureOpenaiClient = new AzureOpenAIClient(
     new Uri(Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")!),
     new Azure.Identity.AzureCliCredential());
 
-var chatCompletionClient = openaiClient.GetChatClient(Environment.GetEnvironmentVariable("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME") !);
+var chatCompletionClient = azureOpenaiClient.GetChatClient(Environment.GetEnvironmentVariable("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME") !);
 
 AIAgent writer = chatCompletionClient.AsAIAgent(
     instructions: instructions,
