@@ -1,33 +1,11 @@
 ﻿﻿// See https://aka.ms/new-console-template for more information
 
-/*
-RETRIEVE variables in PowerShell:
-- Current session: <Get-ChildItem Env:> or <Get-ChildItem Env:VARIABLE_NAME>
-- Permanent user variables: <Get-ItemProperty HKCU:\Environment> or <Get-ItemProperty 'HKCU:\Environment' -Name VARIABLE_NAME>
-- Permanent system variables: <Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'> or <Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name VARIABLE_NAME>
-
-SET variables in PowerShell:
-- Current session: <$env:VARIABLE_NAME = "value">
-- Permanent user variables: <setx VARIABLE_NAME "value">
-- Permanent system variables (requires admin): <[Environment]::SetEnvironmentVariable("VARIABLE_NAME", "value", "Machine")>
-
-DELETE variables in PowerShell:
-- Current session: <Remove-Item Env:VARIABLE_NAME>
-- Permanent user variables: <Remove-ItemProperty -Path HKCU:\Environment -Name VARIABLE_NAME>
-- Permanent system variables (requires admin): <[Environment]::SetEnvironmentVariable("VARIABLE_NAME", $null, "Machine")>
-*/
-
-
-// read variables from environment with <$env:VARIABLE_NAME>
-// create with <setx VARIABLE_NAME value>
-// delete with <Remove-ItemProperty -Path HKCU:\Environment -Name MyVariableName>
-
 using System.ClientModel;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using OpenAI;
 
-Console.WriteLine(Environment.GetEnvironmentVariable("GITHUB_MODELS_PAT_CLASSIC"));
+Console.WriteLine(Environment.GetEnvironmentVariable("GITHUB_MODELS_PAT_CLASSIC")?.Substring(0, 10) + "************");
 
 var question = "Write a short story about a haunted house.";
 var cc = new OpenAI.Chat.ChatClient("gpt-4o-mini",
