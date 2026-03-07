@@ -51,11 +51,30 @@ trigger:
 
 ## 0. Environment variables preparation
 Make sure that the following environment variables are defined, using PowerShell or CMD with Administator privileges:
+### TL;DR
 ```bash
 setx AIF_BASPROJECT_ENDPOINT "https://<aifoundryService>.services.ai.azure.com/api/projects/<projectName>" # afer this, please restart the terminal
 $env:AZURE_OPENAI_CHAT_DEPLOYMENT_NAME = "gpt-4o-mini" # to make it immediately available in the current terminal session
 echo $env:AIF_BASPROJECT_ENDPOINT # justo to check, after restarting the terminal
 ```
+
+### Environment variables setting and getting details:
+RETRIEVE variables in PowerShell:
+- Current session: <Get-ChildItem Env:> or <Get-ChildItem Env:VARIABLE_NAME>
+- Permanent user variables: <Get-ItemProperty HKCU:\Environment> or <Get-ItemProperty 'HKCU:\Environment' -Name VARIABLE_NAME>
+- Permanent system variables: <Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'> or <Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name VARIABLE_NAME>
+
+SET variables in PowerShell:
+- Current session: <$env:VARIABLE_NAME = "value">
+- Permanent user variables: <setx VARIABLE_NAME "value">
+- Permanent system variables (requires admin): <[Environment]::SetEnvironmentVariable("VARIABLE_NAME", "value", "Machine")>
+
+DELETE variables in PowerShell:
+- Current session: <Remove-Item Env:VARIABLE_NAME>
+- Permanent user variables: <Remove-ItemProperty -Path HKCU:\Environment -Name VARIABLE_NAME>
+- Permanent system variables (requires admin): <[Environment]::SetEnvironmentVariable("VARIABLE_NAME", $null, "Machine")>
+
+
 
 ## 1. Create the Project
 
