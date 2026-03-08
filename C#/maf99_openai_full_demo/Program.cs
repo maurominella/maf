@@ -9,16 +9,16 @@ using Microsoft.Extensions.AI;
 using OpenAI;
 using OpenAI.Chat;
 
-var question = "Write a short story about a haunted house.";
-var agent1_instructions = "Write stories that are engaging and creative in less than 80 words.";
+var question = "Write a short story about a haunted house, using less than 50 words, in addition to possible details from the provided tools like author, title, and genre.";
+var agent1_instructions = "Write stories that are engaging and creative ";
 var agent1_instructionsToolsAware = agent1_instructions + " At the beginning of each story, please add all its possible details taken from the provided tools.";
-var agent2_instructions = "You are a translator. Always translate the input text into Italian immediately, without asking for confirmation or adding extra commentary. Output only the translated text.";
+var agent2_instructions = "You are a translator. Do not skip any part of the input text, even if it is repetitive looks redundant, or out of context. Always translate the **ENTIRE** input text into Italian immediately, without asking for confirmation or adding extra commentary. Output only the translated text.";
 
 var projectEndpoint = Environment.GetEnvironmentVariable("AIF_BAS_PROJECT_ENDPOINT")
     ?? throw new InvalidOperationException("Missing project endpoint env var");
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
 
-var mafOpenAIAgentName = "storyTellerAgent";
+var mafOpenAIAgentName = "mafOpenAIAgent";
 var foundryV1AgentName = "translatorAgent";
 
 #endregion
@@ -33,7 +33,7 @@ var cc = new OpenAI.Chat.ChatClient("gpt-4o-mini",
  // Send a chat request using the vendor-specific client
 ChatCompletion response_openAI = (await cc.CompleteChatAsync("Hi there!")).Value;
 
-Console.WriteLine("\n\n+++ Running storyTellerAgent with OpenAI client +++\n");
+Console.WriteLine("\n\n+++ Running mafOpenAIAgent with OpenAI client +++\n");
 Console.WriteLine(response_openAI.Content[0].Text);
 #endregion
 
@@ -42,15 +42,15 @@ Console.WriteLine(response_openAI.Content[0].Text);
 IChatClient cc_adapter = cc.AsIChatClient();
 
 // Create a writer agent that uses the chat client to generate a story
-AIAgent mafStorytellerAgent = new ChatClientAgent(
+AIAgent mafOpenAIAgent = new ChatClientAgent(
     chatClient: cc_adapter,
     name: mafOpenAIAgentName,
     instructions: agent1_instructions
 );
 
-AgentResponse story = await mafStorytellerAgent.RunAsync(question);
+AgentResponse story = await mafOpenAIAgent.RunAsync(question);
 
-Console.WriteLine("\n\n+++ Running storyTellerAgent with MAF client +++\n");
+Console.WriteLine("\n\n+++ Running mafOpenAIAgent with MAF client +++\n");
 Console.WriteLine(story.Text);
 
 //region Tools as inline functions
@@ -66,7 +66,7 @@ string FormatStory(string title, string author, string story) =>
 AIFunction aiFunctionGetStoryAuthor = AIFunctionFactory.Create(GetStoryAuthor);
 var aiFunctionFormatStory = AIFunctionFactory.Create(FormatStory);
 
-AIAgent mafStorytellerWithToolsAgent = new ChatClientAgent(
+AIAgent mafOpenAIWithToolsAgent = new ChatClientAgent(
     chatClient: cc_adapter,
     name: mafOpenAIAgentName,
     instructions: agent1_instructionsToolsAware,
@@ -77,8 +77,8 @@ AIAgent mafStorytellerWithToolsAgent = new ChatClientAgent(
 );
 
 // Invoke the agent WITH TOOLS (and streaming support).
-Console.WriteLine("\n\n+++ Running storyTellerAgent with MAF client, using Tools +++\n");
-await foreach (var update in mafStorytellerWithToolsAgent.RunStreamingAsync(question))
+Console.WriteLine("\n\n+++ Running mafOpenAIWithToolsAgent with MAF client, using Tools +++\n");
+await foreach (var update in mafOpenAIWithToolsAgent.RunStreamingAsync(question))
 {
     Console.Write(update);
 }
@@ -93,18 +93,38 @@ PersistentAgent metadataClassicFoundryAgent2 = await aiFoundryPersistentProjectC
     name: foundryV1AgentName, 
     instructions: agent2_instructions);
 
-AIAgent mafClassicFoundryAgent2 = await aiFoundryPersistentProjectClient.GetAIAgentAsync(metadataClassicFoundryAgent2.Id);
+AIAgent mafClassicFoundryAgent = await aiFoundryPersistentProjectClient.GetAIAgentAsync(metadataClassicFoundryAgent2.Id);
 
-var mafAgentResponse = await mafClassicFoundryAgent2.RunAsync("This is some text to translate");
+var mafAgentResponse = await mafClassicFoundryAgent.RunAsync("This is some text to translate");
 Console.WriteLine("\n\n+++ Running translatorAgent alone with MAF client +++\n");
 Console.WriteLine(mafAgentResponse.Text);
 #endregion
 
 #region Create a workflow agent that uses both the storyteller and translator agents
 Workflow workflow = AgentWorkflowBuilder
-    .BuildSequential(mafStorytellerWithToolsAgent, mafClassicFoundryAgent2);
+    .BuildSequential(mafOpenAIWithToolsAgent, mafClassicFoundryAgent);
+
+
+var builder = new WorkflowBuilder(mafOpenAIWithToolsAgent);
 
 AIAgent workflowAgent = workflow.AsAIAgent();
+
+/*
+// This is a possible alternative way to create the workflow agent, using the WorkflowBuilder directly, 
+// rather than first creating a Workflow and then converting it to an agent. The resulting workflowAgent would be the same in both cases.
+AIAgent workflowAgent = builder.Build().AsAIAgent();
+
+// Optional step to allow human input in the workflow, in this case we use it to pass the original question to the second agent, 
+// but it could be used for other purposes as well, like allowing human feedback at different stages of the workflow.
+var humanPort = RequestPort.Create<string, string>("human-input"); 
+
+builder
+    .AddEdge(mafOpenAIWithToolsAgent, humanPort)
+    .AddEdge(humanPort, mafClassicFoundryAgent)
+    .WithOutputFrom(mafClassicFoundryAgent)
+    .WithName("Storytelling and translation workflow")
+    .WithDescription("A workflow that first generates a story using the mafOpenAIWithToolsAgent, and then translates it to Italian using the translatorAgent.");
+*/
 
 var workflowResponse = await workflowAgent.RunAsync(question);
 var finalText = workflowResponse.Messages.LastOrDefault()?.Text ?? "[no text output from workflow]";
