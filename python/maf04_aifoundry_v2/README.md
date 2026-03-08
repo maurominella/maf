@@ -1,1 +1,0 @@
-Please whatch the sample [main03_response_stateful_foundryagent_v2.py](../maf02_responses/main03_response_stateful_foundryagent_v2.py)
