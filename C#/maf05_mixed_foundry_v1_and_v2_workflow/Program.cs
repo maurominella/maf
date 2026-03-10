@@ -6,6 +6,8 @@ using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Workflows;
+using Microsoft.Extensions.Options;
+using Microsoft.Identity.Client;
 
 var projectEndpoint = Environment.GetEnvironmentVariable("AIF_STD_PROJECT_ENDPOINT")
     ?? throw new InvalidOperationException("Missing project endpoint env var");
@@ -24,9 +26,10 @@ const string agent2Instructions = "You are a translator. Always translate the in
 // which is the main entry point to interact with Foundry. The same client will be used for both persistent and volatile scenarios, 
 // as well as for administration and runtime operations.
 var aiFoundryPersistentProjectClient = new PersistentAgentsClient(projectEndpoint, new AzureCliCredential());
+var aiFoundryV2ProjectClient = new AIProjectClient(new Uri(projectEndpoint), new AzureCliCredential());
 #endregion
 
-#region Create or Retrieve two server side V1/Classic agents METADATA with the Azure.AI.Agents SDK client
+#region Create or Retrieve one server side V1/Classic agent METADATA with the Azure.AI.Agents SDK client
 // we call them "metadataClassicFoundryAgent" because they contain metadata about the agents created in Foundry,
 // they are actually created in Foundry with the instructions provided, but htey are not yet MAF agents,
 // and they are not directly usable for chatting or workflows. We will convert them to MAF agents in a later step to show how to use them in a simpler way.
@@ -36,10 +39,6 @@ PersistentAgent metadataClassicFoundryAgent1 = await aiFoundryPersistentProjectC
     name: agent1Name, 
     instructions: agent1Instructions);
 
-PersistentAgent metadataClassicFoundryAgent2 = await aiFoundryPersistentProjectClient.Administration.CreateAgentAsync(
-    model: deploymentName, 
-    name: agent2Name, 
-    instructions: agent2Instructions);
 #endregion
 
 #region Create a PERSISTENT thread for the first agent (service-side) and add a message to the thread
@@ -91,18 +90,31 @@ var agentText = lastMessage?
 
 var agent1TextSafe = agentText ?? "[no agent reply found]";
 
+Console.WriteLine("\n\n=== Agent V1 Response with Foundry SDK ===");
 Console.WriteLine(agent1TextSafe);
 #endregion
 
-#region For the second agent, we first convert it to a MAF agent, to show how to use it in a simpler way
-// Convert the second agent to a MAF agent, which is easier to use for chatting and workflows, 
-// as it abstracts away the thread and message management, and the run management.
-AIAgent mafClassicFoundryAgent2 = await aiFoundryPersistentProjectClient.GetAIAgentAsync(metadataClassicFoundryAgent2.Id);
+#region For the second agent, we create it as a MAF agent in a one-shot way
+
+// a longer way would be to use aiFoundryV2ProjectClient.Agents.CreateAgentVersionAsync
+// if the Prompt agent exists, we can simply run agentv2 = await _aiProjectClient.GetAIAgentAsync("foundryagent-V2-with-bing");
+
+// but here we want to show how to create it in a one-shot way, which is more convenient for quick testing and prototyping, 
+// without the need to go through multiple steps of creating the agent version, then the agent, etc.
+var mafPromptFoundryAgentV2 = await aiFoundryV2ProjectClient.CreateAIAgentAsync(
+    name: agent2Name,
+    model:deploymentName,
+    instructions: agent2Instructions);
+
 #endregion
 
 #region Invoke the second agent and output the text result
 // withouth memory reuse
-Console.WriteLine(await mafClassicFoundryAgent2.RunAsync("Tell me a joke about a pirate."));
+await mafPromptFoundryAgentV2.RunAsync("What is the weather in Milan today?").ContinueWith(r =>
+{
+    Console.WriteLine("\n\n=== Agent V2 Response ===");
+    Console.WriteLine(r.Result);
+});
 
 // with memory reuse - the agent can access the previous conversation history and context through the "session" object, 
 // which is linked to the thread we created for the first agent. This allows us to have a continuous conversation across multiple agents, 
@@ -115,10 +127,10 @@ Console.WriteLine(await mafClassicFoundryAgent2.RunAsync("Tell me a joke about a
 #region Create a volatile workflow - linear pipeline with the two agents
 // The first agent is still a "pure" foundry agent, so we need to convert it to a MAF agent as well 
 // to be able to use it in the workflow, which is a MAF construct.
-AIAgent mafClassicFoundryAgent1 = await aiFoundryPersistentProjectClient.GetAIAgentAsync(metadataClassicFoundryAgent1.Id);
+AIAgent mafClassicFoundryAgentV1 = await aiFoundryPersistentProjectClient.GetAIAgentAsync(metadataClassicFoundryAgent1.Id);
 
 Workflow workflow = AgentWorkflowBuilder
-    .BuildSequential(mafClassicFoundryAgent1, mafClassicFoundryAgent2);
+    .BuildSequential(mafClassicFoundryAgentV1, mafPromptFoundryAgentV2);
 
 AIAgent workflowAgent = workflow.AsAIAgent();
 
@@ -126,8 +138,8 @@ var workflowResponse = await workflowAgent.RunAsync("Tell me a joke about a dog.
 
 var finalText = workflowResponse.Messages.LastOrDefault()?.Text ?? "[no text output from workflow]";
 
-Console.WriteLine("=== Final workflow output ===");
+Console.WriteLine("\n\n=== Final workflow output ===");
 Console.WriteLine(finalText);
 #endregion
 
-Console.WriteLine("Program has ended successfully.");
+Console.WriteLine("\n\n=== Program has ended successfully ===");

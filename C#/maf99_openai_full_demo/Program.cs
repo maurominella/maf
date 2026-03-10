@@ -9,23 +9,22 @@ using Microsoft.Extensions.AI;
 using OpenAI;
 using OpenAI.Chat;
 
-var question = "Write a short story about a haunted house, using less than 50 words, in addition to possible details from the provided tools like author, title, and genre.";
+var question = "Write a short story about a haunted house, using less than 50 words.";
 var agent1_instructions = "Write stories that are engaging and creative ";
 var agent1_instructionsToolsAware = agent1_instructions + " At the beginning of each story, please add all its possible details taken from the provided tools.";
 var agent2_instructions = "You are a translator. Do not skip any part of the input text, even if it is repetitive looks redundant, or out of context. Always translate the **ENTIRE** input text into Italian immediately, without asking for confirmation or adding extra commentary. Output only the translated text.";
 
-var projectEndpoint = Environment.GetEnvironmentVariable("AIF_BAS_PROJECT_ENDPOINT")
+var projectEndpoint = Environment.GetEnvironmentVariable("AIF_STD_PROJECT_ENDPOINT")
     ?? throw new InvalidOperationException("Missing project endpoint env var");
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
 
-var mafOpenAIAgentName = "mafOpenAIAgent";
-var foundryV1AgentName = "translatorAgent";
+var openAIAgentName    = "openAIStorytellerAgent";
+var foundryV1AgentName = "foundryTranslatorAgent";
 
 #endregion
 
 #region openai client creation using ME-AI full package
-// chat client creation using the OpenAI Extension (rather than the original OpenAI library)
-
+// chat client creation and invokation using the OpenAI Extension (rather than the original OpenAI library)
 var cc = new OpenAI.Chat.ChatClient("gpt-4o-mini",
  new ApiKeyCredential(Environment.GetEnvironmentVariable("GITHUB_MODELS_PAT_CLASSIC")!),
  new OpenAIClientOptions { Endpoint = new Uri("https://models.github.ai/inference") });
@@ -33,24 +32,25 @@ var cc = new OpenAI.Chat.ChatClient("gpt-4o-mini",
  // Send a chat request using the vendor-specific client
 ChatCompletion response_openAI = (await cc.CompleteChatAsync("Hi there!")).Value;
 
-Console.WriteLine("\n\n+++ Running mafOpenAIAgent with OpenAI client +++\n");
+Console.WriteLine("\n\n+++ Running openAIAgent with OpenAI client +++\n");
 Console.WriteLine(response_openAI.Content[0].Text);
 #endregion
 
-#region MAF agent end-to-end implementation on top of the OpenAI chat client
+#region MAF agent to "adapt" OpenAI chat client as a MAF-compatible chat client, and use it in an agent with and without tools
 // Adapt OpenAI ChatClient to IChatClient
 IChatClient cc_adapter = cc.AsIChatClient();
 
 // Create a writer agent that uses the chat client to generate a story
 AIAgent mafOpenAIAgent = new ChatClientAgent(
     chatClient: cc_adapter,
-    name: mafOpenAIAgentName,
+    name: openAIAgentName,
     instructions: agent1_instructions
 );
+Console.WriteLine("\n\n+++ Same question, using the MAF Agent +++\n");
+Console.WriteLine(await mafOpenAIAgent.RunAsync("Hi there!"));
 
 AgentResponse story = await mafOpenAIAgent.RunAsync(question);
-
-Console.WriteLine("\n\n+++ Running mafOpenAIAgent with MAF client +++\n");
+Console.WriteLine("\n\n+++ Invoking  MAF Agent for a more complex question +++\n");
 Console.WriteLine(story.Text);
 
 //region Tools as inline functions
@@ -68,7 +68,7 @@ var aiFunctionFormatStory = AIFunctionFactory.Create(FormatStory);
 
 AIAgent mafOpenAIWithToolsAgent = new ChatClientAgent(
     chatClient: cc_adapter,
-    name: mafOpenAIAgentName,
+    name: openAIAgentName,
     instructions: agent1_instructionsToolsAware,
     tools: [
             aiFunctionGetStoryAuthor,
@@ -77,26 +77,28 @@ AIAgent mafOpenAIWithToolsAgent = new ChatClientAgent(
 );
 
 // Invoke the agent WITH TOOLS (and streaming support).
-Console.WriteLine("\n\n+++ Running mafOpenAIWithToolsAgent with MAF client, using Tools +++\n");
+Console.WriteLine("\n\n+++ Invoking mafOpenAIAgent, using Tools +++\n");
 await foreach (var update in mafOpenAIWithToolsAgent.RunStreamingAsync(question))
 {
     Console.Write(update);
 }
 #endregion
 
-#region MAF agent end-to-end implementation on top of the Foundry V1 agent framework
+#region MAF agent created by the Extension of the Foundry V1 agent
 // Create a Project client with Azure CLI Credential (or any other TokenCredential of your choice)
 var aiFoundryPersistentProjectClient = new PersistentAgentsClient(projectEndpoint, new AzureCliCredential());
 
+// Create a Foundry V1 agent using Foundry SDK
 PersistentAgent metadataClassicFoundryAgent2 = await aiFoundryPersistentProjectClient.Administration.CreateAgentAsync(
     model: deploymentName, 
     name: foundryV1AgentName, 
     instructions: agent2_instructions);
 
+// Convert the Foundry V1 agent to a MAF agent using the Extension method provided by the ME-AI package.
 AIAgent mafClassicFoundryAgent = await aiFoundryPersistentProjectClient.GetAIAgentAsync(metadataClassicFoundryAgent2.Id);
 
 var mafAgentResponse = await mafClassicFoundryAgent.RunAsync("This is some text to translate");
-Console.WriteLine("\n\n+++ Running translatorAgent alone with MAF client +++\n");
+Console.WriteLine("\n\n+++ Running Foundry Translator Agent alone with MAF client +++\n");
 Console.WriteLine(mafAgentResponse.Text);
 #endregion
 
