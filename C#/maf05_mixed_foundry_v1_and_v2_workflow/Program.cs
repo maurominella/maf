@@ -21,12 +21,12 @@ const string agent1Instructions = "You are good at telling jokes. You speak Engl
 const string agent2Instructions = "You are a translator. Always translate the input text into Italian immediately, without asking for confirmation or adding extra commentary. Output only the translated text.";
 #endregion
 
-#region Create a Project client with Azure CLI Credential (or any other TokenCredential of your choice)
+#region Create V1 and V2 Project clients with Azure CLI Credential (or any other TokenCredential of your choice)
 // even if the statement is PersistentAgentsClient, we are actually creating a client for the project, 
 // which is the main entry point to interact with Foundry. The same client will be used for both persistent and volatile scenarios, 
 // as well as for administration and runtime operations.
 var aiFoundryPersistentProjectClient = new PersistentAgentsClient(projectEndpoint, new AzureCliCredential());
-var aiFoundryV2ProjectClient = new AIProjectClient(new Uri(projectEndpoint), new AzureCliCredential());
+var aiFoundryV2ProjectClient         = new AIProjectClient(new Uri(projectEndpoint), new AzureCliCredential());
 #endregion
 
 #region Create or Retrieve one server side V1/Classic agent METADATA with the Azure.AI.Agents SDK client
@@ -41,7 +41,7 @@ PersistentAgent metadataClassicFoundryAgent1 = await aiFoundryPersistentProjectC
 
 #endregion
 
-#region Create a PERSISTENT thread for the first agent (service-side) and add a message to the thread
+#region Create a PERSISTENT (=V1) thread for the first agent (service-side) and add a message to the thread
 // create the thread
 PersistentAgentThread thread1 = (await aiFoundryPersistentProjectClient.Threads.CreateThreadAsync()).Value;
 
@@ -53,7 +53,7 @@ await aiFoundryPersistentProjectClient.Messages.CreateMessageAsync(
 );
 #endregion
 
-#region Invoke the first agent on the thread and wait for Run completion
+#region Invoke the first V1 agent on the thread and wait for Run completion
 // retrieve the messages of the thread
 var runResult = await aiFoundryPersistentProjectClient.Runs.CreateRunAsync(
     thread: thread1,
@@ -70,7 +70,7 @@ do
     && run.Status != Azure.AI.Agents.Persistent.RunStatus.Cancelled);
 #endregion
 
-#region Retrieve the first agent reply from the thread
+#region Retrieve the first V1 agent reply from the thread
 // Option A: iterate and pick the last agent message on the fly
 PersistentThreadMessage? lastMessage = null;
 await foreach (var m in aiFoundryPersistentProjectClient.Messages.GetMessagesAsync(thread1.Id))
@@ -94,7 +94,7 @@ Console.WriteLine("\n\n=== Agent V1 Response with Foundry SDK ===");
 Console.WriteLine(agent1TextSafe);
 #endregion
 
-#region For the second agent, we create it as a MAF agent in a one-shot way
+#region For the second agent (FOUNDRY V2), we create it as a MAF agent in a one-shot way
 
 // a longer way would be to use aiFoundryV2ProjectClient.Agents.CreateAgentVersionAsync
 // if the Prompt agent exists, we can simply run agentv2 = await _aiProjectClient.GetAIAgentAsync("foundryagent-V2-with-bing");

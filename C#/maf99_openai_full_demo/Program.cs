@@ -1,13 +1,13 @@
 ﻿#region libraries and variables
-using System.ClientModel;
-using System.ComponentModel;
-using Azure.AI.Agents.Persistent;
 using Azure.Identity;
 using Microsoft.Agents.AI;
-using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;
 using OpenAI;
 using OpenAI.Chat;
+using System.ClientModel;
+using System.ComponentModel;
+using Azure.AI.Projects;
+using Microsoft.Agents.AI.Workflows;
 
 var question = "Write a short story about a haunted house, using less than 50 words.";
 var agent1_instructions = "Write stories that are engaging and creative ";
@@ -19,12 +19,12 @@ var projectEndpoint = Environment.GetEnvironmentVariable("AIF_STD_PROJECT_ENDPOI
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
 
 var openAIAgentName    = "openAIStorytellerAgent";
-var foundryV1AgentName = "foundryTranslatorAgent";
+var foundryV2AgentName = "foundryTranslatorAgent";
 
 #endregion
 
-#region openai client creation using ME-AI full package
-// chat client creation and invokation using the OpenAI Extension (rather than the original OpenAI library)
+#region OpenAI client creation using "pure" OpenAI library and invocation
+// chat client creation and invokation using the OpenAI SDK (that installs the original OpenAI library)
 var cc = new OpenAI.Chat.ChatClient("gpt-4o-mini",
  new ApiKeyCredential(Environment.GetEnvironmentVariable("GITHUB_MODELS_PAT_CLASSIC")!),
  new OpenAIClientOptions { Endpoint = new Uri("https://models.github.ai/inference") });
@@ -36,7 +36,7 @@ Console.WriteLine("\n\n+++ Running openAIAgent with OpenAI client +++\n");
 Console.WriteLine(response_openAI.Content[0].Text);
 #endregion
 
-#region MAF agent to "adapt" OpenAI chat client as a MAF-compatible chat client, and use it in an agent with and without tools
+#region Full MAF agent to create OpenAI chat client as a MAF-compatible chat client
 // Adapt OpenAI ChatClient to IChatClient
 IChatClient cc_adapter = cc.AsIChatClient();
 
@@ -84,28 +84,25 @@ await foreach (var update in mafOpenAIWithToolsAgent.RunStreamingAsync(question)
 }
 #endregion
 
-#region MAF agent created by the Extension of the Foundry V1 agent
-// Create a Project client with Azure CLI Credential (or any other TokenCredential of your choice)
-var aiFoundryPersistentProjectClient = new PersistentAgentsClient(projectEndpoint, new AzureCliCredential());
+#region Foundry V2 Prompt agents using MAF
+// Leverage Azure CLI Credential (or any other TokenCredential of your choice)
 
-// Create a Foundry V1 agent using Foundry SDK
-PersistentAgent metadataClassicFoundryAgent2 = await aiFoundryPersistentProjectClient.Administration.CreateAgentAsync(
-    model: deploymentName, 
-    name: foundryV1AgentName, 
+var aiFoundryV2ProjectClient = new AIProjectClient(new Uri(projectEndpoint), new AzureCliCredential());
+
+var mafPromptFoundryAgentV2 = await aiFoundryV2ProjectClient.CreateAIAgentAsync(
+    name: openAIAgentName,
+    model: deploymentName,
     instructions: agent2_instructions);
 
-// Convert the Foundry V1 agent to a MAF agent using the Extension method provided by the ME-AI package.
-AIAgent mafClassicFoundryAgent = await aiFoundryPersistentProjectClient.GetAIAgentAsync(metadataClassicFoundryAgent2.Id);
 
-var mafAgentResponse = await mafClassicFoundryAgent.RunAsync("This is some text to translate");
+var mafAgentResponse = await mafPromptFoundryAgentV2.RunAsync("This is some text to translate");
 Console.WriteLine("\n\n+++ Running Foundry Translator Agent alone with MAF client +++\n");
 Console.WriteLine(mafAgentResponse.Text);
 #endregion
 
 #region Create a workflow agent that uses both the storyteller and translator agents
 Workflow workflow = AgentWorkflowBuilder
-    .BuildSequential(mafOpenAIWithToolsAgent, mafClassicFoundryAgent);
-
+    .BuildSequential(mafOpenAIWithToolsAgent, mafPromptFoundryAgentV2);
 
 var builder = new WorkflowBuilder(mafOpenAIWithToolsAgent);
 
@@ -122,8 +119,8 @@ var humanPort = RequestPort.Create<string, string>("human-input");
 
 builder
     .AddEdge(mafOpenAIWithToolsAgent, humanPort)
-    .AddEdge(humanPort, mafClassicFoundryAgent)
-    .WithOutputFrom(mafClassicFoundryAgent)
+    .AddEdge(humanPort, mafPromptFoundryAgentV2)
+    .WithOutputFrom(mafPromptFoundryAgentV2)
     .WithName("Storytelling and translation workflow")
     .WithDescription("A workflow that first generates a story using the mafOpenAIWithToolsAgent, and then translates it to Italian using the translatorAgent.");
 */
@@ -131,7 +128,7 @@ builder
 var workflowResponse = await workflowAgent.RunAsync(question);
 var finalText = workflowResponse.Messages.LastOrDefault()?.Text ?? "[no text output from workflow]";
 
-Console.WriteLine("\n\n+++ Running workflowAgent with MAF OpenAI <client with tools> + MAFFoundryV1 Client +++\n");
+Console.WriteLine("\n\n+++ Running workflowAgent with MAF OpenAI <client with tools>Agent + MAF FoundryV2 Agent +++\n");
 Console.WriteLine(finalText);
 #endregion
 
