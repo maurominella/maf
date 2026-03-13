@@ -8,13 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Agents.AI.AzureAI" Version="1.0.0-rc3" />
-    <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-rc3" />
-    <PackageReference Include="Azure.Identity" Version="1.18.0" />
-    <PackageReference Include="Microsoft.Agents.AI.Workflows" Version="1.0.0-rc3" />
+    <PackageReference Include="Azure.Identity" Version="1.19.0" />
+    <PackageReference Include="Microsoft.Agents.AI.AzureAI" Version="1.0.0-rc4" />
+    <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-rc4" />
+    <PackageReference Include="Microsoft.Agents.AI.Workflows" Version="1.0.0-rc4" />
   </ItemGroup>
 
 </Project>
