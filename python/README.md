@@ -6,11 +6,13 @@
 
 ## Setup Steps
 - **CD** into the folder
-- Create the environment: `uv init . --python 3.13`
+- Create the environment: `uv init . --python 3.13 --create-venv`
 - Add libraries:
   - Automatically: `uv add $(cat requirements.txt) --prerelease=allow`
   - Manually: `uv add <package-name> --prerelease=allow`
-- Synchronize to create the file structure: `uv sync --prerelease=allow`
+- Synchronize to create the file structure: 
+  - `uv sync --prerelease=allow`
+  - uv venv
 - Activate the environment:
   - On Linux/macOS: `source .venv/bin/activate`
   - On Windows: `.\.venv\Scripts\activate.ps1`
