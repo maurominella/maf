@@ -6,15 +6,6 @@
 
 ## Setup Steps
 - **CD** into the folder
-<<<<<<< HEAD
-- Create the environment: `uv init . --python 3.13 --create-venv`
-- Add libraries:
-  - Automatically: `uv add $(cat requirements.txt) --prerelease=allow`
-  - Manually: `uv add <package-name> --prerelease=allow`
-- Synchronize to create the file structure: 
-  - `uv sync --prerelease=allow`
-  - uv venv
-=======
 - Create the environment: `uv init . --python 3.13`
 - Create the local virtual environment: `uv venv`
 - Activate the environment:
