@@ -32,7 +32,7 @@ var cc = new OpenAI.Chat.ChatClient("gpt-4o-mini",
  // Send a chat request using the vendor-specific client
 ChatCompletion response_openAI = (await cc.CompleteChatAsync("Hi there!")).Value;
 
-Console.WriteLine("\n\n+++ Running openAIAgent with OpenAI client +++\n");
+Console.WriteLine("\n\n+++ openAIAgent with OpenAI client (CompleteChatAsync) +++\n");
 Console.WriteLine(response_openAI.Content[0].Text);
 #endregion
 
@@ -46,11 +46,9 @@ AIAgent mafOpenAIAgent = new ChatClientAgent(
     name: openAIAgentName,
     instructions: agent1_instructions
 );
-Console.WriteLine("\n\n+++ Same question, using the MAF Agent +++\n");
-Console.WriteLine(await mafOpenAIAgent.RunAsync("Hi there!"));
 
 AgentResponse story = await mafOpenAIAgent.RunAsync(question);
-Console.WriteLine("\n\n+++ Invoking  MAF Agent for a more complex question +++\n");
+Console.WriteLine("\n\n+++ OpenAI Agent (storyteller) with MAF (RunAsync) +++\n");
 Console.WriteLine(story.Text);
 
 //region Tools as inline functions
@@ -77,7 +75,7 @@ AIAgent mafOpenAIWithToolsAgent = new ChatClientAgent(
 );
 
 // Invoke the agent WITH TOOLS (and streaming support).
-Console.WriteLine("\n\n+++ Invoking mafOpenAIAgent, using Tools +++\n");
+Console.WriteLine("\n\n+++  OpenAI Agent (storyteller + tools) with MAF (RunAsync) +++\n");
 await foreach (var update in mafOpenAIWithToolsAgent.RunStreamingAsync(question))
 {
     Console.Write(update);
@@ -90,13 +88,13 @@ await foreach (var update in mafOpenAIWithToolsAgent.RunStreamingAsync(question)
 var aiFoundryV2ProjectClient = new AIProjectClient(new Uri(projectEndpoint), new AzureCliCredential());
 
 var mafPromptFoundryAgentV2 = await aiFoundryV2ProjectClient.CreateAIAgentAsync(
-    name: openAIAgentName,
+    name: foundryV2AgentName,
     model: deploymentName,
     instructions: agent2_instructions);
 
 
-var mafAgentResponse = await mafPromptFoundryAgentV2.RunAsync("This is some text to translate");
-Console.WriteLine("\n\n+++ Running Foundry Translator Agent alone with MAF client +++\n");
+var mafAgentResponse = await mafPromptFoundryAgentV2.RunAsync("This is some English text to translate");
+Console.WriteLine("\n\n\n+++ OpenAI Agent (translator) with MAF (RunAsync) +++\n");
 Console.WriteLine(mafAgentResponse.Text);
 #endregion
 
@@ -128,7 +126,7 @@ builder
 var workflowResponse = await workflowAgent.RunAsync(question);
 var finalText = workflowResponse.Messages.LastOrDefault()?.Text ?? "[no text output from workflow]";
 
-Console.WriteLine("\n\n+++ Running workflowAgent with MAF OpenAI <client with tools>Agent + MAF FoundryV2 Agent +++\n");
+Console.WriteLine("\n\n+++ Workflow Agent as MAF Agent (RunAsync) +++\n");
 Console.WriteLine(finalText);
 #endregion
 

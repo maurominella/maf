@@ -23,12 +23,12 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "maf01_openai_adapter",
+              "Title": "maf01_openai_adapter.csproj",
               "DocumentMoniker": "C:\\Users\\mauromi\\source\\git_repos\\maf\\C#\\maf01_openai_adapter\\maf01_openai_adapter.csproj",
               "RelativeDocumentMoniker": "maf01_openai_adapter.csproj",
               "ToolTip": "C:\\Users\\mauromi\\source\\git_repos\\maf\\C#\\maf01_openai_adapter\\maf01_openai_adapter.csproj",
               "RelativeToolTip": "maf01_openai_adapter.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABSAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2026-03-10T17:29:58.769Z",
               "EditorCaption": ""
@@ -43,8 +43,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-10T17:29:51.691Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-10T17:29:51.691Z"
             }
           ]
         }

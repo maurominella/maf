@@ -25,7 +25,7 @@ const string agent2Instructions = "You are a translator. Always translate the in
 // even if the statement is PersistentAgentsClient, we are actually creating a client for the project, 
 // which is the main entry point to interact with Foundry. The same client will be used for both persistent and volatile scenarios, 
 // as well as for administration and runtime operations.
-var aiFoundryPersistentProjectClient = new PersistentAgentsClient(projectEndpoint, new AzureCliCredential());
+var aiFoundryV1ClassicProjectClient = new PersistentAgentsClient(projectEndpoint, new AzureCliCredential());
 var aiFoundryV2ProjectClient         = new AIProjectClient(new Uri(projectEndpoint), new AzureCliCredential());
 #endregion
 
@@ -34,7 +34,7 @@ var aiFoundryV2ProjectClient         = new AIProjectClient(new Uri(projectEndpoi
 // they are actually created in Foundry with the instructions provided, but htey are not yet MAF agents,
 // and they are not directly usable for chatting or workflows. We will convert them to MAF agents in a later step to show how to use them in a simpler way.
 
-PersistentAgent metadataClassicFoundryAgent1 = await aiFoundryPersistentProjectClient.Administration.CreateAgentAsync(
+PersistentAgent metadataClassicFoundryAgent1 = await aiFoundryV1ClassicProjectClient.Administration.CreateAgentAsync(
     model: deploymentName, 
     name: agent1Name, 
     instructions: agent1Instructions);
@@ -43,10 +43,10 @@ PersistentAgent metadataClassicFoundryAgent1 = await aiFoundryPersistentProjectC
 
 #region Create a PERSISTENT (=V1) thread for the first agent (service-side) and add a message to the thread
 // create the thread
-PersistentAgentThread thread1 = (await aiFoundryPersistentProjectClient.Threads.CreateThreadAsync()).Value;
+PersistentAgentThread thread1 = (await aiFoundryV1ClassicProjectClient.Threads.CreateThreadAsync()).Value;
 
 // add a message to the thread
-await aiFoundryPersistentProjectClient.Messages.CreateMessageAsync(
+await aiFoundryV1ClassicProjectClient.Messages.CreateMessageAsync(
     threadId: thread1.Id,
     role: MessageRole.User,
     content: "Tell me a joke about a dog."
@@ -55,7 +55,7 @@ await aiFoundryPersistentProjectClient.Messages.CreateMessageAsync(
 
 #region Invoke the first V1 agent on the thread and wait for Run completion
 // retrieve the messages of the thread
-var runResult = await aiFoundryPersistentProjectClient.Runs.CreateRunAsync(
+var runResult = await aiFoundryV1ClassicProjectClient.Runs.CreateRunAsync(
     thread: thread1,
     agent: metadataClassicFoundryAgent1
 );
@@ -64,7 +64,7 @@ ThreadRun run;
 do
 {
     await Task.Delay(500);
-    run = (await aiFoundryPersistentProjectClient.Runs.GetRunAsync(thread1.Id, runResult.Value.Id)).Value; 
+    run = (await aiFoundryV1ClassicProjectClient.Runs.GetRunAsync(thread1.Id, runResult.Value.Id)).Value; 
 } while (run.Status != Azure.AI.Agents.Persistent.RunStatus.Completed 
     && run.Status != Azure.AI.Agents.Persistent.RunStatus.Failed 
     && run.Status != Azure.AI.Agents.Persistent.RunStatus.Cancelled);
@@ -73,7 +73,7 @@ do
 #region Retrieve the first V1 agent reply from the thread
 // Option A: iterate and pick the last agent message on the fly
 PersistentThreadMessage? lastMessage = null;
-await foreach (var m in aiFoundryPersistentProjectClient.Messages.GetMessagesAsync(thread1.Id))
+await foreach (var m in aiFoundryV1ClassicProjectClient.Messages.GetMessagesAsync(thread1.Id))
 {
     if (m.Role == MessageRole.Agent)
     {
@@ -127,7 +127,7 @@ await mafPromptFoundryAgentV2.RunAsync("What is the weather in Milan today?").Co
 #region Create a volatile workflow - linear pipeline with the two agents
 // The first agent is still a "pure" foundry agent, so we need to convert it to a MAF agent as well 
 // to be able to use it in the workflow, which is a MAF construct.
-AIAgent mafClassicFoundryAgentV1 = await aiFoundryPersistentProjectClient.GetAIAgentAsync(metadataClassicFoundryAgent1.Id);
+AIAgent mafClassicFoundryAgentV1 = await aiFoundryV1ClassicProjectClient.GetAIAgentAsync(metadataClassicFoundryAgent1.Id);
 
 Workflow workflow = AgentWorkflowBuilder
     .BuildSequential(mafClassicFoundryAgentV1, mafPromptFoundryAgentV2);

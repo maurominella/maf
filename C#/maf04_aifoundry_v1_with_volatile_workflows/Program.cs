@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using Azure.AI.Agents;
 using Azure.AI.Agents.Persistent;
-using Azure.AI.Projects;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Workflows;
