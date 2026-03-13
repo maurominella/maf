@@ -4,7 +4,6 @@ using System.ComponentModel;
 using Azure.AI.OpenAI;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
-using OpenAI;
 using OpenAI.Chat;
 
 var question = "Write a short story about a haunted house, using no more than 100 words.";
