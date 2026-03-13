@@ -17,7 +17,6 @@
 =======
 - Create the environment: `uv init . --python 3.13`
 - Create the local virtual environment: `uv venv`
->>>>>>> 2dfe9cd9a9d4b984df14f872b084010c9cf26392
 - Activate the environment:
   - On Linux/macOS: `source .venv/bin/activate`
   - On Windows: `.\.venv\Scripts\activate.ps1`
