@@ -6,6 +6,7 @@
 
 ## Setup Steps
 - **CD** into the folder
+<<<<<<< HEAD
 - Create the environment: `uv init . --python 3.13 --create-venv`
 - Add libraries:
   - Automatically: `uv add $(cat requirements.txt) --prerelease=allow`
@@ -13,8 +14,24 @@
 - Synchronize to create the file structure: 
   - `uv sync --prerelease=allow`
   - uv venv
+=======
+- Create the environment: `uv init . --python 3.13`
+- Create the local virtual environment: `uv venv`
+>>>>>>> 2dfe9cd9a9d4b984df14f872b084010c9cf26392
 - Activate the environment:
   - On Linux/macOS: `source .venv/bin/activate`
   - On Windows: `.\.venv\Scripts\activate.ps1`
+- Add libraries (it's KEY to use `--active`):
+  - Automatically: `uv add --active $(cat requirements.txt) --prerelease=allow`
+  - Manually: `uv add --active <package-name> --prerelease=allow`
+- Check that the packges are installed: `uv pip list`
+- Synchronize to create the file structure: `uv sync --active --prerelease=allow`
 - To deactivate: `deactivate`
-- Create kernel for the jupyter notebook: `python -m ipykernel install --name maf --use`
+- Create kernel for the jupyter notebook: ```python -m ipykernel install --name maf --use```
+- Test Python:
+```
+python - << 'EOF'
+import agent_framework
+print("OK:", agent_framework)
+EOF
+```

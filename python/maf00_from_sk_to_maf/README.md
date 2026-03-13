@@ -1,18 +1,30 @@
 # Microsoft Agent Framework sample for comparison with Semantic Kernel
 
 ## UV Installation
-- On Linux / MAC --> `curl -LsSf https://astral.sh/uv/install.sh | sh`
-- On Windows --> `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+- On Linux / macOS: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- On Windows: `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
 
-## Steps
-- Create the environment: `uv init maf --python 3.12`.
-- Move into the folder that is automatically created: `cd maf`.
-- Add libraries: `uv add agent-framework-azure-ai --prerelease=allow python-dotenv jupyter`.
-- Syncrhonize to create the file structure: `uv sync`.
+## Setup Steps
+- **CD** into the folder
+- Create the environment: `uv init . --python 3.13`
+- Create the local virtual environment: `uv venv`
 - Activate the environment:
-  - on Linux/MC --> `source .venv/bin/activate`.
-  - on Windows --> `.\.venv\Scripts\activate.ps1`.
-- To deactivate --> `deactivate`.
+  - On Linux/macOS: `source .venv/bin/activate`
+  - On Windows: `.\.venv\Scripts\activate.ps1`
+- Add libraries (it's KEY to use `--active`):
+  - Automatically: `uv add --active $(cat requirements.txt) --prerelease=allow`
+  - Manually: `uv add --active <package-name> --prerelease=allow`
+- Check that the packges are installed: `uv pip list`
+- Synchronize to create the file structure: `uv sync --active --prerelease=allow`
+- To deactivate: `deactivate`
+- Create kernel for the jupyter notebook: ```python -m ipykernel install --name maf00_from_sk_to_maf --use```
+- Test Python:
+```
+python - << 'EOF'
+import agent_framework
+print("OK:", agent_framework)
+EOF
+```
 
 ## What this sample does
 It uses the **Microsoft Agent Framework** to create an agent that relies on the Azure OpenAI Responses service:
