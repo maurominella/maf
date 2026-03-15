@@ -1,18 +1,14 @@
 [project]
-name = "python"
+name = "maf01"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "agent-framework>=1.0.0rc3",
-    "azure-ai-projects>=2.0.0b4",
+    "agent-framework>=1.0.0rc4",
+    "agent-framework-azure-ai>=1.0.0rc4",
+    "azure-ai-projects>=2.0.1",
     "azure-identity>=1.26.0b2",
     "jupyter>=1.1.1",
     "python-dotenv>=1.2.2",
-]
-
-[tool.uv.workspace]
-members = [
-    "maf05_mixed_foundry_v1_and_v2_workflow",
 ]

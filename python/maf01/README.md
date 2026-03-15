@@ -1,4 +1,4 @@
-# MAF
+# MAF01
 
 ## UV Installation
 - On Linux / macOS: `curl -LsSf https://astral.sh/uv/install.sh | sh`
@@ -17,8 +17,8 @@
 - Check that the packges are installed: `uv pip list`
 - Synchronize to create the file structure: `uv sync --active --prerelease=allow`
 - List jupyter kernels: `jupyter kernelspec list`
-- Delete a jupyter kernel: `jupyter kernelspec uninstall maf`
-- Create kernel for the jupyter notebook: ```python -m ipykernel install --name maf --use```
+- Delete a jupyter kernel: `jupyter kernelspec uninstall maf01`
+- Create kernel for the jupyter notebook: ```python -m ipykernel install --name maf01 --use```
 - Test Python:
 ```
 python - << 'EOF'
