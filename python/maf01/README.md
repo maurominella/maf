@@ -7,11 +7,6 @@
 ## Setup Steps
 - **CD** into the folder
 - Create the environment: `uv init . --python 3.13`
-- Eventually, add the following line to pyproject.toml within the dependencies (initially empty):
-```
-    # ❗ prevent Anthropic integration
-    "agent-framework-anthropic; sys_platform == 'never'"
-```
 - Create the local virtual environment: `uv venv`
 - Activate the environment:
   - On Linux/macOS: `source .venv/bin/activate`
