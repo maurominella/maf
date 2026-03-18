@@ -8,7 +8,7 @@ from IPython.display import Markdown, display
 from agent_framework import Agent
 
 
-
+# Global variables - recall to declare them as "global" in the functions where they are assigned
 config_path = "../../../config" # explicit path to the config folder
 sys.path.append(config_path)
 from auth import acquire_bearer_token, StaticBearerTokenCredential
@@ -17,7 +17,6 @@ if not load_dotenv(f"{config_path}/credentials_my.env"):
 else:
     print("Environment variables have been loaded ;-)")
 
-# Global variables - recall to declare them as "global" in the functions where they are assigned
 project_endpoint = "" # must be Foundry V1 project!
 deployment_name = ""
 agent_name = ""
