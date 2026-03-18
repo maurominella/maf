@@ -7,7 +7,6 @@ from IPython.display import Markdown, display
 # from agent_framework import ai_function
 from agent_framework import Agent
 
-
 # Global variables - recall to declare them as "global" in the functions where they are assigned
 config_path = "../../../config" # explicit path to the config folder
 sys.path.append(config_path)
