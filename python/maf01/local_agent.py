@@ -55,7 +55,7 @@ def init():
     acr_endpoint = os.getenv("ACR_ENDPOINT")
     acr_image = "my-image:tag"
     credential = StaticBearerTokenCredential(bearer_token_azureai)    
-    
+   
 
 def create_hosted_agent():
     # Initialize the client
@@ -86,6 +86,7 @@ def create_hosted_agent():
 
     return agent
 
+
 def get_local_date_time(iana_timezone: str) -> str:
     """
     Get the current date and time for a given timezone.
@@ -109,6 +110,7 @@ def get_local_date_time(iana_timezone: str) -> str:
         return f"The current date and time in {iana_timezone} is {current_time.strftime('%A, %B %d, %Y at %I:%M %p %Z')}"
     except Exception as e:
         return f"Error: Unable to get time for timezone '{iana_timezone}'. {str(e)}"
+
 
 async def create_hosting_adapter_agent():   
     from agent_framework.azure import AzureOpenAIResponsesClient
