@@ -8,8 +8,10 @@
 - **CD** into the folder
 - Create the environment: `uv init . --python 3.13`
 - Eventually, add the following line to pyproject.toml:
-```[tool.uv.overrides]
-agent-framework-anthropic = { marker = "false" }```
+```
+[tool.uv.overrides]
+agent-framework-anthropic = { marker = "false" }
+```
 - Create the local virtual environment: `uv venv`
 - Activate the environment:
   - On Linux/macOS: `source .venv/bin/activate`
