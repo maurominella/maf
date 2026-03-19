@@ -21,8 +21,6 @@ deployment_name = ""
 agent_name = ""
 agent_instructions = ""
 credential = None
-acr_endpoint = ""
-acr_image = ""
 query = "Where is Seattle? What time is it there right now?"
 #endregion
 
@@ -43,46 +41,14 @@ def authentication_and_environmentsetup():
 
 
 def init():
-    global project_endpoint, deployment_name, credential, agent_name, acr_endpoint, acr_image, agent_instructions
+    global project_endpoint, deployment_name, credential, agent_name, agent_instructions
     
-    project_endpoint = os.getenv("AIF_STD_PROJECT_ENDPOINT") # must be Foundry V1 project
+    project_endpoint = os.getenv("AIF_STD_PROJECT_ENDPOINT") # must be Foundry V2 project
     deployment_name = os.getenv("MODEL_DEPLOYMENT_NAME")
     agent_name = "local-hosting-agent-01"
     agent_instructions = "You are a helpful assistant that can tell users the current date and time in any location. When a user asks about the time in a city or location, use the get_local_date_time tool with the appropriate IANA timezone string for that location."
-    acr_endpoint = os.getenv("ACR_ENDPOINT")
-    acr_image = "my-image:tag"
     credential = StaticBearerTokenCredential(bearer_token_azureai)    
    
-
-def create_hosted_agent():
-    # Initialize the client
-    from azure.ai.projects import AIProjectClient
-    from azure.ai.projects.models import HostedAgentDefinition, ProtocolVersionRecord, AgentProtocol
-
-    project_client = AIProjectClient(
-        endpoint=project_endpoint,
-        credential=credential,
-        allow_preview=True,
-    )
-
-    # Create the agent from a container image
-    agent = project_client.agents.create_version(
-        agent_name=agent_name,
-        definition=HostedAgentDefinition(
-            container_protocol_versions=[ProtocolVersionRecord(protocol=AgentProtocol.RESPONSES, version="v1")],
-        cpu="1",
-        memory="2Gi",
-        image=f"{acr_endpoint}/{acr_image}",
-        environment_variables={
-            "AZURE_AI_PROJECT_ENDPOINT": project_endpoint,
-            "MODEL_NAME": deployment_name,
-            "CUSTOM_SETTING": "value"
-        }    
-        )    
-    )
-
-    return agent
-
 
 def get_local_date_time(iana_timezone: str) -> str:
     """
@@ -109,38 +75,49 @@ def get_local_date_time(iana_timezone: str) -> str:
         return f"Error: Unable to get time for timezone '{iana_timezone}'. {str(e)}"
 
 
-async def create_hosting_adapter_agent():   
+async def create_maf_agent_async():
     from agent_framework.azure import AzureOpenAIResponsesClient
 
-    client = AzureOpenAIResponsesClient(
+    azureopenai_client = AzureOpenAIResponsesClient( # this call is async
         deployment_name=deployment_name,
         project_endpoint=project_endpoint,
         credential=credential)
     
-    agent = client.as_agent(
+    # option 1 - manually creating the agent by passing the client, instructions, and tools. This gives more control and flexibility over the agent configuration, but requires more code and understanding of the underlying components.
+    agent = Agent(
+        client=azureopenai_client,
+        instructions=agent_instructions,
+        tools=[get_local_date_time]  # Our random destination tool function
+    )
+
+    # option 2 - using the as_agent method to create the agent directly from the client, which abstracts away some of the details and is more concise. This is also an async call.
+    """
+    agent = azureopenai_client.as_agent(
         name=agent_name,
         instructions=agent_instructions,
         tools=[get_local_date_time])
-    
+    """
+
     return agent
 
 
 async def main():
-    # from_agent_framework_tool()
     authentication_and_environmentsetup()
     init()
 
-    my_hosting_adapter_agent = await create_hosting_adapter_agent()
-    response = await my_hosting_adapter_agent.run(query)
-    print(f"# Agent: {response.text}")
-
-    # my_hosted_agent = create_hosted_agent()    
-    # print(f"Agent created: {my_hosted_agent.name} (id: {my_hosted_agent.id}, version: {my_hosted_agent.version})")
+    agent1 = await create_maf_agent_async() # async call to create agent using AzureOpenAIResponsesClient.as_agent() method
+    response1 = await agent1.run(query)
+    print(f"# Agent1: {response1.text}")
     
-    return my_hosting_adapter_agent
+    return agent1
 
 
 if __name__ == "__main__":
     agent = asyncio.run(main())
+
+    # here we convert the agent_framework Agent to an Azure AI AgentServer agent and run it, which will start a local server 
+    # hosting the agent and allow us to interact with it via API calls or a playground UI. 
+    # Note that the agent must be created with tools that are compatible with the Azure AI AgentServer environment for this to work properly.
     from_agent_framework(agent).run()
+
     print("Program executed successfully")
