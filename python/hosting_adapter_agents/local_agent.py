@@ -1,10 +1,13 @@
 #region Common Libraries & Global variables
 # Common Libraries
 import os, sys
+import asyncio
 from dotenv import load_dotenv # requires python-dotenv
-from IPython.display import Markdown, display
-from agent_framework import ai_function
+from agent_framework import Agent
+from azure.ai.agentserver.agentframework import from_agent_framework
 
+
+# Global variables - recall to declare them as "global" in the functions where they are assigned
 config_path = "../../../config" # explicit path to the config folder
 sys.path.append(config_path)
 from auth import acquire_bearer_token, StaticBearerTokenCredential
@@ -13,16 +16,16 @@ if not load_dotenv(f"{config_path}/credentials_my.env"):
 else:
     print("Environment variables have been loaded ;-)")
 
-# Global variables - recall to declare them as "global" in the functions where they are assigned
 project_endpoint = "" # must be Foundry V1 project!
 deployment_name = ""
 agent_name = ""
+agent_instructions = ""
 credential = None
 acr_endpoint = ""
 acr_image = ""
+query = "Where is Seattle? What time is it there right now?"
 #endregion
 
-@ai_function
 def authentication_and_environmentsetup():
     global bearer_token_cognitiveservices, bearer_token_azureai
     bearer_token_cognitiveservices, user_cognitiveservices = acquire_bearer_token(
@@ -40,15 +43,16 @@ def authentication_and_environmentsetup():
 
 
 def init():
-    global project_endpoint, deployment_name, credential, agent_name, acr_endpoint, acr_image
+    global project_endpoint, deployment_name, credential, agent_name, acr_endpoint, acr_image, agent_instructions
     
     project_endpoint = os.getenv("AIF_STD_PROJECT_ENDPOINT") # must be Foundry V1 project
     deployment_name = os.getenv("MODEL_DEPLOYMENT_NAME")
-    agent_name = "hosted-agent-01"
+    agent_name = "local-hosting-agent-01"
+    agent_instructions = "You are a helpful assistant that can tell users the current date and time in any location. When a user asks about the time in a city or location, use the get_local_date_time tool with the appropriate IANA timezone string for that location."
     acr_endpoint = os.getenv("ACR_ENDPOINT")
     acr_image = "my-image:tag"
     credential = StaticBearerTokenCredential(bearer_token_azureai)    
-    
+   
 
 def create_hosted_agent():
     # Initialize the client
@@ -79,6 +83,7 @@ def create_hosted_agent():
 
     return agent
 
+
 def get_local_date_time(iana_timezone: str) -> str:
     """
     Get the current date and time for a given timezone.
@@ -95,7 +100,7 @@ def get_local_date_time(iana_timezone: str) -> str:
 
     from datetime import datetime
     from zoneinfo import ZoneInfo
-
+    
     try:
         tz = ZoneInfo(iana_timezone)
         current_time = datetime.now(tz)
@@ -104,32 +109,38 @@ def get_local_date_time(iana_timezone: str) -> str:
         return f"Error: Unable to get time for timezone '{iana_timezone}'. {str(e)}"
 
 
-def create_hosting_adapter_agent():
-    # Create the agent with a local Python tool
+async def create_hosting_adapter_agent():   
+    from agent_framework.azure import AzureOpenAIResponsesClient
 
-    from agent_framework import ChatAgent
-    from agent_framework.azure import AzureAIAgentClient
+    client = AzureOpenAIResponsesClient(
+        deployment_name=deployment_name,
+        project_endpoint=project_endpoint,
+        credential=credential)
+    
+    agent = client.as_agent(
+        name=agent_name,
+        instructions=agent_instructions,
+        tools=[get_local_date_time])
+    
+    return agent
 
-    hosting_adapter_agent = ChatAgent(
-        chat_client=AzureAIAgentClient(
-            project_endpoint=project_endpoint,
-            model_deployment_name=deployment_name,
-            credential=credential,
-        ),
-        instructions="You are a helpful assistant that can tell users the current date and time in any location. When a user asks about the time in a city or location, use the get_local_date_time tool with the appropriate IANA timezone string for that location.",
-        tools=[get_local_date_time],
-    )
-    return hosting_adapter_agent
 
-def main():
+async def main():
+    # from_agent_framework_tool()
     authentication_and_environmentsetup()
     init()
 
-    my_hosting_adapter_agent = create_hosting_adapter_agent()
-    
+    my_hosting_adapter_agent = await create_hosting_adapter_agent()
+    response = await my_hosting_adapter_agent.run(query)
+    print(f"# Agent: {response.text}")
+
     # my_hosted_agent = create_hosted_agent()    
     # print(f"Agent created: {my_hosted_agent.name} (id: {my_hosted_agent.id}, version: {my_hosted_agent.version})")
     
+    return my_hosting_adapter_agent
+
 
 if __name__ == "__main__":
-    main()
+    agent = asyncio.run(main())
+    from_agent_framework(agent).run()
+    print("Program executed successfully")

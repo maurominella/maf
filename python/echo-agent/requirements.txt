@@ -1,0 +1,3 @@
+azure-ai-agentserver-agentframework
+python-dotenv
+azure-monitor-opentelemetry

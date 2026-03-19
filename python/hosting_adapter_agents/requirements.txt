@@ -1,5 +1,6 @@
-azure-ai-projects
-agent_framework
 azure-identity
 python-dotenv
+azure-ai-projects
+agent-framework
+agent-framework-azure-ai
 jupyter
