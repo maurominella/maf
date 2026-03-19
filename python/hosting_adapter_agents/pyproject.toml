@@ -1,13 +1,13 @@
 [project]
-name = "maf01"
+name = "hosting-adapter-agents"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "azure-ai-agentserver-agentframework>=1.0.0b17",
-    "azure-identity>=1.26.0b2",
-    "graphviz>=0.20.0",
-    "python-dotenv>=1.2.2",
-    "tzdata>=2025.3",
+    "azure-ai-agentserver-agentframework==1.0.0b17",
+    "azure-identity==1.26.0b2",
+    "graphviz==0.20.0",
+    "python-dotenv==1.2.2",
+    "tzdata==2025.3",
 ]
