@@ -3,9 +3,6 @@
 import os, sys
 import asyncio
 from dotenv import load_dotenv # requires python-dotenv
-from agent_framework import Agent
-from azure.ai.agentserver.agentframework import from_agent_framework
-
 
 # Global variables - recall to declare them as "global" in the functions where they are assigned
 config_path = "../../../config" # explicit path to the config folder
@@ -77,6 +74,7 @@ def get_local_date_time(iana_timezone: str) -> str:
 
 async def create_maf_agent_async():
     from agent_framework.azure import AzureOpenAIResponsesClient
+    from agent_framework import Agent
 
     azureopenai_client = AzureOpenAIResponsesClient( # this call is async
         deployment_name=deployment_name,
@@ -112,12 +110,19 @@ async def main():
     return agent1
 
 
+def start_agent_server(agent):
+    """
+    Here we convert the agent_framework Agent to an Azure AI AgentServer agent and run it, which will start a local server 
+    hosting the agent and allow us to interact with it via API calls or a playground UI. 
+    Note that the agent must be created with tools that are compatible with the Azure AI AgentServer environment for this to work properly.
+    """
+    from azure.ai.agentserver.agentframework import from_agent_framework
+    from_agent_framework(agent).run()
+
+    
 if __name__ == "__main__":
     agent = asyncio.run(main())
 
-    # here we convert the agent_framework Agent to an Azure AI AgentServer agent and run it, which will start a local server 
-    # hosting the agent and allow us to interact with it via API calls or a playground UI. 
-    # Note that the agent must be created with tools that are compatible with the Azure AI AgentServer environment for this to work properly.
-    from_agent_framework(agent).run()
+    start_agent_server(agent)
 
     print("Program executed successfully")
