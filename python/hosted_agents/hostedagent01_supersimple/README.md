@@ -18,7 +18,6 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "tzdata>=2025.1",
 ]
-```
 
 [tool.uv]
 prerelease = "allow"
@@ -26,6 +25,7 @@ override-dependencies = [
     "agent-framework-core>=1.0.0rc3",
     "agent-framework-azure-ai>=1.0.0rc3",
 ]
+```
 
 ### PowerShell commands
 ```powershell
