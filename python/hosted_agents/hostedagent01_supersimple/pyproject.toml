@@ -13,7 +13,3 @@ dependencies = [
 
 [tool.uv]
 prerelease = "allow"
-override-dependencies = [
-    "agent-framework-core>=1.0.0rc3",
-    "agent-framework-azure-ai>=1.0.0rc3",
-]
