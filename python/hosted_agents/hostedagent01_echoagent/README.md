@@ -47,10 +47,19 @@ RUN pip install --no-cache-dir --pre \
 - CMD ["python", "agent.py"] uses the fixed agent.py as entrypoint instead of main.py
 - Port 8088 is exposed to match your local server
 
+
+### Docker utilities
+- check docker container (even not-running) --> `docker ps -a`
+- delete docker container: `docker rm <container-id>` (eventually `-force`)
+
+- check docker images (even not-running) --> `docker images -a`
+- delete docker container: `docker rmi <image-id>` (eventually `-force`)
+
+
 ### Building and running locally to test before deploying:
 - note that we're mapping the *internal* port 8088 to the *external* port 8089
 ```
 cd python/hosted_agents/hostedagent01_echoagent
-docker build -t hostedagent02 .
+docker build -t hostedagent01_echoagent .
 docker run -p 8089:8088 hostedagent01_echoagent
 ```
