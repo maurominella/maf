@@ -1,0 +1,12 @@
+schema: 1
+name: local-hosting-agent-01
+
+runtime:
+  type: python
+  entrypoint: local_agent.py
+  python_version: "3.13"
+  requirements: requirements.txt
+
+server:
+  type: agentserver
+  port: 8000

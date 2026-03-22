@@ -1,4 +1,0 @@
-azure-ai-projects
-azure-identity
-python-dotenv
-jupyter

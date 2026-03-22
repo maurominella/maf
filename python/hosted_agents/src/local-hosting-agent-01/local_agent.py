@@ -5,10 +5,10 @@ import asyncio
 from dotenv import load_dotenv # requires python-dotenv
 
 # Global variables - recall to declare them as "global" in the functions where they are assigned
-config_path = "../../../config" # explicit path to the config folder
+config_path = "." # explicit path to the config folder, like ../../../config
 sys.path.append(config_path)
-from agent.auth import acquire_bearer_token, StaticBearerTokenCredential
-if not load_dotenv(f"{config_path}/credentials_my.env"):
+from auth import acquire_bearer_token, StaticBearerTokenCredential
+if not load_dotenv(): # f"{config_path}/credentials_my.env"):
     print("Environment variables not loaded, cell execution stopped")
 else:
     print("Environment variables have been loaded ;-)")
@@ -79,20 +79,11 @@ async def create_maf_agent_async():
         deployment_name=deployment_name,
         )
     
-    # option 1 - manually creating the agent by passing the client, instructions, and tools. This gives more control and flexibility over the agent configuration, but requires more code and understanding of the underlying components.
     agent = Agent(
         client=azureopenai_client,
         instructions=agent_instructions,
         tools=[get_local_date_time]  # Our random destination tool function
     )
-
-    # option 2 - using the as_agent method to create the agent directly from the client, which abstracts away some of the details and is more concise. This is also an async call.
-    """
-    agent = azureopenai_client.as_agent(
-        name=agent_name,
-        instructions=agent_instructions,
-        tools=[get_local_date_time])
-    """
 
     return agent
 
@@ -118,3 +109,5 @@ if __name__ == "__main__":
     agent = asyncio.run(main())
     start_agent_server(agent)
     print("Program executed successfully")
+
+    
