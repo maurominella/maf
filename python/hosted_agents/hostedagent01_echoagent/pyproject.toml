@@ -18,3 +18,8 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "tzdata>=2025.1",
 ]
+
+[tool.uv.workspace]
+members = [
+    "_hosted/src/hostedagent01-echoagent",
+]

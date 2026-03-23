@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, AsyncGenerator
 
 from agent_framework import (
     AgentResponse,
@@ -7,6 +7,7 @@ from agent_framework import (
     BaseAgent,
     Content,
     Message,
+    ResponseStream,
     Role,
     normalize_messages,
 )
@@ -43,14 +44,14 @@ class hostedagent01_supersimple(BaseAgent):
             **kwargs,
         )
 
-    async def run(
+    def run(
         self,
         messages: str | Message | list[str] | list[Message] | None = None,
         *,
         stream: bool = False,
         session: AgentSession | None = None,
         **kwargs: Any,
-    ):
+    ) -> AgentResponse | AsyncGenerator[AgentResponseUpdate, None]:
         """Execute the agent and return a complete response or a streaming generator.
 
         Args:
@@ -74,8 +75,9 @@ class hostedagent01_supersimple(BaseAgent):
             else:
                 response_text = f"{self.echo_prefix}[Non-text message received]"
 
-        if stream:
-            async def _stream():
+        # --- STREAMING MODE ----------------------------------------------------
+        if stream and session is not None:
+            async def generator():
                 words = response_text.split()
                 for i, word in enumerate(words):
                     chunk_text = f" {word}" if i > 0 else word
@@ -83,11 +85,15 @@ class hostedagent01_supersimple(BaseAgent):
                         contents=[Content(type="text", text=chunk_text)],
                         role="assistant",
                     )
-            return _stream()
 
-        response_message = Message(role="assistant", text=response_text)
-        return AgentResponse(messages=[response_message])
+            # Return a valid async generator for streaming mode
+            return ResponseStream(generator(), finalizer=AgentResponse.from_updates) # return generator()
 
+        # --- NON-STREAMING MODE ------------------------------------------------
+        async def _respond():
+            return AgentResponse(messages=[Message(role="assistant", text=response_text)])
+        return _respond()
+    
 
 def create_agent() -> hostedagent01_supersimple:
     agent = hostedagent01_supersimple(

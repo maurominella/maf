@@ -1,4 +1,0 @@
-azure-ai-agentserver-agentframework==1.0.0b17
-azure-identity==1.26.0b2
-python-dotenv==1.2.2
-tzdata==2025.3
