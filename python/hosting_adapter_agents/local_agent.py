@@ -13,7 +13,7 @@ if not load_dotenv(f"{config_path}/credentials_my.env"):
 else:
     print("Environment variables have been loaded ;-)")
 
-project_endpoint = "" # must be Foundry V1 project!
+project_endpoint = "" 
 deployment_name = ""
 agent_name = ""
 agent_instructions = ""
