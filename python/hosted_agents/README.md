@@ -134,3 +134,6 @@ The **Environment name** in this case will be `hostedagent05_echoagent`. Based o
 | Host Port | Container Port | Meaning |
 |-----------|----------------|---------|
 | 8089      | 8088           | When you visit http://localhost:8089, Docker forwards traffic to internal port 8088 |
+
+### Test the agent locally
+![alt text](image-13.png)
