@@ -7,23 +7,23 @@ This guide provides a concise approach for publishing and testing a hosted agent
 
 1. Create the base folder and cd into it:
    ```bash
-   cd hostedagent05_echoagent
    md hostedagent05_echoagent
+   cd hostedagent05_echoagent
    ```
 
-2. Initialize the project:
+2. Initialize the project:<br/>
+The **Environment name** in this case will be `hostedagent05_echoagent`. Based on it, Azure will create the corresponding Resource Group: `rg-hostedagent05_echoagent`.
+
    ```bash
    azd init -t https://github.com/Azure-Samples/azd-ai-starter-basic
    ```
+   Durining initialization, please specify the `environment` name, which in this case will be the agent name, e.g. *hostedagent05_echoagent*
 
 3. Set the environment variables:
    ```bash
    azd env set AIF_STD_PROJECT_ENDPOINT "https://<...>"
    azd env set MODEL_DEPLOYMENT_NAME "<deployment>"
    ```
-
-### Environment name
-The environment name is `hostedagent05_echoagent`. Based on it, Azure will create the corresponding Resource Group: `rg-hostedagent05_echoagent`.
 
 ## 2. Agent Project
 
