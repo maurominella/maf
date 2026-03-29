@@ -102,9 +102,9 @@ The **Environment name** in this case will be `hostedagent05_echoagent`. Based o
    azd deploy hostedagent05-echoagent
    ```
    This step takes about two minutes:<br/>
-   ![<alt text>](image-7.png)<br/>
+   ![<alt text>](image-7.png)<br/><br/>
    , and adds the hosted agent to the project: <br/>
-   ![alt text](image-8.png)<br/>
+   ![alt text](image-8.png)<br/><br/>
    , which works and produces logs:<br/>
    ![alt text](image-9.png)
 
