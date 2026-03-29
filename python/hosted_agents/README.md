@@ -104,7 +104,9 @@ The **Environment name** in this case will be `hostedagent05_echoagent`. Based o
    This step takes about two minutes:<br/>
    ![<alt text>](image-7.png)<br/>
    , and adds the hosted agent to the project: <br/>
-   ![alt text](image-8.png)
+   ![alt text](image-8.png)<br/>
+   , which works and produces logs:<br/>
+   ![alt text](image-9.png)
 
 ## 4. Local Docker Build and Run
 
