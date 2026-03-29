@@ -105,27 +105,30 @@ The **Environment name** in this case will be `hostedagent05_echoagent`. Based o
    ![<alt text>](image-7.png)<br/><br/>
    , and adds the hosted agent to the project: <br/>
    ![alt text](image-8.png)<br/><br/>
-   , which works and produces logs:<br/>
+   , which works and produces logs in the logs stream:<br/>
    ![alt text](image-9.png)
 
 ## 4. Local Docker Build and Run
 
-1. Build the Docker image:
+1. Build the Docker image, which takes about 1 minute:
    ```bash
    docker build -t hostedagent05_echoagent .\src\hostedagent05-echoagent\.
    ```
+   ![alt text](image-10.png)
 
 2. List Docker images:
    ```bash
    docker images -a
    ```
+   ![alt text](image-11.png)
 
-3. Run the Docker container:
+3. Run the Docker container (in this case, we map `external` port 8089 to `internal` 8088):
    ```bash
-   docker run -p 8080:8080 hostedagent05_echoagent
+   docker run -p 8089:8088 hostedagent05_echoagent
    ```
+   ![alt text](image-12.png)
 
-## 5. Port Mapping
+### 5. Port Mapping for Docker containers (optional)
 
 1. **Actual internal application port:** `8088`
    - Your Python application exposes itself on port `8088` inside the container. This is the port you need to map.
@@ -143,7 +146,7 @@ The **Environment name** in this case will be `hostedagent05_echoagent`. Based o
 3. **Desired external port:** `8089`
    - This is the host port you want to use to access the app.
 
-### Correct command
+#### Correct command
 If your app listens on `8088`, run:
 
 ```bash
