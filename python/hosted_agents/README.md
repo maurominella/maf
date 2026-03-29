@@ -83,6 +83,20 @@ The **Environment name** in this case will be `hostedagent05_echoagent`. Based o
    ```bash
    azd provision
    ```
+   This step provisions six Azure Resources:<br/> 
+   
+   ![alt text](image-4.png)<br/>
+   - Resource group
+   - Foundry
+   - Foundry project
+   - Log Analytics workspace
+   - Application Insights
+   - Container Registry<br/>
+   ![alt text](image-5.png)<br/>
+   , and may tke up to 5 minutes.<br/>
+   At this point, the foundry project still does not contain any agents: <br/>
+   ![alt text](image-6.png)
+
 
 2. Deploy the agent:
    ```bash
