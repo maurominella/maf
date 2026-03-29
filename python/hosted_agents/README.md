@@ -126,63 +126,11 @@ The **Environment name** in this case will be `hostedagent05_echoagent`. Based o
    ```bash
    docker run -p 8089:8088 hostedagent05_echoagent
    ```
-   ![alt text](image-12.png)
-
-### 5. Port Mapping for Docker containers (optional)
-
-1. **Actual internal application port:** `8088`
-   - Your Python application exposes itself on port `8088` inside the container. This is the port you need to map.
-
-2. **Dockerfile EXPOSE port:** `8080`
-   - In the Dockerfile you have:
-     ```dockerfile
-     EXPOSE 8080
-     ```
-   - **Note:** `EXPOSE` is only informational. If your app listens on `8088`, it is a good practice to change it to:
-     ```dockerfile
-     EXPOSE 8088
-     ```
-
-3. **Desired external port:** `8089`
-   - This is the host port you want to use to access the app.
-
-#### Correct command
-If your app listens on `8088`, run:
-
-```bash
-docker run -p 8089:8088 name-image
-```
+   ![alt text](image-12.png)<br/>
+   **Note:** `EXPOSE` in `Dockerfile` is only informational. If your app listens on `8088`, but it is a good practice to change it to the real port that the agent listens on.
 
 ### Port mapping meaning
 
 | Host Port | Container Port | Meaning |
 |-----------|----------------|---------|
 | 8089      | 8088           | When you visit http://localhost:8089, Docker forwards traffic to internal port 8088 |
-
-### Dockerfile adjustment
-If you want to update the Dockerfile too, change:
-
-```dockerfile
-EXPOSE 8088
-```
-
-Rebuild:
-
-```bash
-docker build -t name-image .
-```
-
-Then run:
-
-```bash
-docker run -p 8089:8088 name-image
-```
-
-## Summary
-- Your app listens on `8088` → this is the internal port.
-- You want to expose it on `8089` → this is the external port.
-- `EXPOSE 8080` does not affect runtime behavior → you can change it or ignore it.
-- Final command:
-```bash
-docker run -p 8089:8088 name-image
-```
