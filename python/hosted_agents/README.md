@@ -84,17 +84,17 @@ The **Environment name** in this case will be `hostedagent05_echoagent`. Based o
    azd provision
    ```
    This step provisions six Azure Resources:<br/>   
-   ![alt text](image-4.png)<br/>
+   ![alt text](README_images/image-4.png)<br/>
    - Resource group
    - Foundry
    - Foundry project
    - Log Analytics workspace
    - Application Insights
    - Container Registry<br/>
-   ![alt text](image-5.png)<br/>
+   ![alt text](README_images/image-5.png)<br/>
    , and may take up to 5 minutes.<br/>
    At this point, the foundry project still does not contain any agents: <br/>
-   ![alt text](image-6.png)
+   ![alt text](README_images/image-6.png)
 
 
 2. Deploy the agent:
@@ -102,11 +102,11 @@ The **Environment name** in this case will be `hostedagent05_echoagent`. Based o
    azd deploy hostedagent05-echoagent
    ```
    This step takes about two minutes:<br/>
-   ![<alt text>](image-7.png)<br/><br/>
+   ![<alt text>](README_images/image-7.png)<br/><br/>
    , and adds the hosted agent to the project: <br/>
-   ![alt text](image-8.png)<br/><br/>
+   ![alt text](README_images/image-8.png)<br/><br/>
    , which works and produces logs in the logs stream:<br/>
-   ![alt text](image-9.png)
+   ![alt text](README_images/image-9.png)
 
 ## 4. Local Docker Build and Run
 
@@ -114,19 +114,19 @@ The **Environment name** in this case will be `hostedagent05_echoagent`. Based o
    ```bash
    docker build -t hostedagent05_echoagent .\src\hostedagent05-echoagent\.
    ```
-   ![alt text](image-10.png)
+   ![alt text](README_images/image-10.png)
 
 2. List Docker images:
    ```bash
    docker images -a
    ```
-   ![alt text](image-11.png)
+   ![alt text](README_images/image-11.png)
 
 3. Run the Docker container (in this case, we map `external` port 8089 to `internal` 8088):
    ```bash
    docker run -p 8089:8088 hostedagent05_echoagent
    ```
-   ![alt text](image-12.png)<br/>
+   ![alt text](README_images/image-12.png)<br/>
    **Note:** `EXPOSE` in `Dockerfile` is only informational. If your app listens on `8088`, but it is a good practice to change it to the real port that the agent listens on.
 
 ### Port mapping meaning
@@ -136,4 +136,4 @@ The **Environment name** in this case will be `hostedagent05_echoagent`. Based o
 | 8089      | 8088           | When you visit http://localhost:8089, Docker forwards traffic to internal port 8088 |
 
 ### Test the agent locally
-![alt text](image-13.png)
+![alt text](README_images/image-13.png)
