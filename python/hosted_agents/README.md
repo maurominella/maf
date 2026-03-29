@@ -33,12 +33,48 @@ The **Environment name** in this case will be `hostedagent05_echoagent`. Based o
 
 2. Copy the following files into that folder:
    - `agent.yaml`
+   - `Dockerfile`
    - `main.py`
    - `requirements.txt`
 
 3. Initialize the agent:
+   This step will ask you to select:
+   - Azure Subscription
+   - Azure Region
+   - Container resource allocation (CPU and memory):
+     - 0.25 cores, 0.5Gi memory
+     - 0.5 cores, 1Gi memory
+     - 1 core, 2Gi memory
+     - 2 cores, 4Gi memory
    ```bash
    azd ai agent init -m agent\agent.yaml
+   ```
+   As a result, such information is written into `azure.yaml`:
+   ```yaml
+   # yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+   requiredVersions:
+      extensions:
+         azure.ai.agents: '>=0.1.0-preview'
+   name: ai-foundry-starter-basic
+   services:
+      hostedagent05-echoagent:
+         project: src/hostedagent05-echoagent
+         host: azure.ai.agent
+         language: docker
+         docker:
+               remoteBuild: true
+         config:
+               container:
+                  resources:
+                     cpu: "0.25"
+                     memory: 0.5Gi
+                  scale:
+                     maxReplicas: 1
+               startupCommand: python main.py
+   infra:
+      provider: bicep
+      path: ./infra
    ```
 
 ## 3. Provision and Deploy
