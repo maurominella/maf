@@ -83,8 +83,7 @@ The **Environment name** in this case will be `hostedagent05_echoagent`. Based o
    ```bash
    azd provision
    ```
-   This step provisions six Azure Resources:<br/> 
-   
+   This step provisions six Azure Resources:<br/>   
    ![alt text](image-4.png)<br/>
    - Resource group
    - Foundry
@@ -93,7 +92,7 @@ The **Environment name** in this case will be `hostedagent05_echoagent`. Based o
    - Application Insights
    - Container Registry<br/>
    ![alt text](image-5.png)<br/>
-   , and may tke up to 5 minutes.<br/>
+   , and may take up to 5 minutes.<br/>
    At this point, the foundry project still does not contain any agents: <br/>
    ![alt text](image-6.png)
 
@@ -102,12 +101,16 @@ The **Environment name** in this case will be `hostedagent05_echoagent`. Based o
    ```bash
    azd deploy hostedagent05-echoagent
    ```
+   This step takes about two minutes:<br/>
+   ![<alt text>](image-7.png)<br/>
+   , and adds the hosted agent to the project: <br/>
+   ![alt text](image-8.png)
 
 ## 4. Local Docker Build and Run
 
 1. Build the Docker image:
    ```bash
-   docker build -t hostedagent05_echoagent .\src\hostedagent05-echoagent\.\
+   docker build -t hostedagent05_echoagent .\src\hostedagent05-echoagent\.
    ```
 
 2. List Docker images:
