@@ -17,12 +17,11 @@ The **Environment name** in this case will be `hostedagent05_echoagent`. Based o
    ```bash
    azd init -t https://github.com/Azure-Samples/azd-ai-starter-basic
    ```
-   Durining initialization, please specify the `environment` name, which in this case will be the agent name, e.g. *hostedagent05_echoagent*
 
 3. Set the environment variables:
    ```bash
-   azd env set AIF_STD_PROJECT_ENDPOINT "https://<...>"
-   azd env set MODEL_DEPLOYMENT_NAME "<deployment>"
+   azd env set AIF_STD_PROJECT_ENDPOINT "https://***.services.ai.azure.com/api/projects/***"
+   azd env set MODEL_DEPLOYMENT_NAME "gpt-4o"
    ```
 
 ## 2. Agent Project
