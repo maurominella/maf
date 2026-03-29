@@ -5,9 +5,10 @@ This guide provides a concise approach for publishing and testing a hosted agent
 
 ## 1. Environment Setup
 
-1. Clone the agent repository:
+1. Create the base folder and cd into it:
    ```bash
-   cd hostedagent04_echoagent
+   cd hostedagent05_echoagent
+   md hostedagent05_echoagent
    ```
 
 2. Initialize the project:
@@ -22,7 +23,7 @@ This guide provides a concise approach for publishing and testing a hosted agent
    ```
 
 ### Environment name
-The environment name is `hostedagent04_echoagent`. Based on it, Azure will create the corresponding Resource Group: `rg-hostedagent04_echoagent`.
+The environment name is `hostedagent05_echoagent`. Based on it, Azure will create the corresponding Resource Group: `rg-hostedagent05_echoagent`.
 
 ## 2. Agent Project
 
@@ -50,14 +51,14 @@ The environment name is `hostedagent04_echoagent`. Based on it, Azure will creat
 
 2. Deploy the agent:
    ```bash
-   azd deploy hostedagent04-echoagent
+   azd deploy hostedagent05-echoagent
    ```
 
 ## 4. Local Docker Build and Run
 
 1. Build the Docker image:
    ```bash
-   docker build -t hostedagent04_echoagent .\src\hostedagent04-echoagent\.\
+   docker build -t hostedagent05_echoagent .\src\hostedagent05-echoagent\.\
    ```
 
 2. List Docker images:
@@ -67,7 +68,7 @@ The environment name is `hostedagent04_echoagent`. Based on it, Azure will creat
 
 3. Run the Docker container:
    ```bash
-   docker run -p 8080:8080 hostedagent04_echoagent
+   docker run -p 8080:8080 hostedagent05_echoagent
    ```
 
 ## 5. Port Mapping

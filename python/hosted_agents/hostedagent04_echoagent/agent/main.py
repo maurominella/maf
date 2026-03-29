@@ -24,25 +24,60 @@ logger = logging.getLogger("env-dump")
 if not logger.handlers:
     logging.basicConfig(level=logging.INFO)
 
-def _mask(value: str, show: int = 6) -> str:
-    """Maschera un valore evitando di loggare segreti interi."""
-    if value is None:
+def _mask(value: str, show: int = 60) -> str:
+    if not value:
         return "<NOT SET>"
     v = str(value)
-    if len(v) <= show:
-        return v
-    return f"{v[:show]}...({len(v)} chars)"
+    return v if len(v) <= show else f"{v[:show]}...({len(v)} chars)"
 
-def log_required_env():
+def log_env_vars():
     aif = os.getenv("AIF_STD_PROJECT_ENDPOINT")
     model = os.getenv("MODEL_DEPLOYMENT_NAME")
 
+    logger.info("=== ENV DUMP (MYAGENT) ===")
     logger.info("AIF_STD_PROJECT_ENDPOINT = %s", _mask(aif))
     logger.info("MODEL_DEPLOYMENT_NAME     = %s", _mask(model))
-
     # Se vuoi anche fallire hard quando mancano:
     # if not aif or not model:
     #     raise RuntimeError("Missing required env vars: AIF_STD_PROJECT_ENDPOINT and/or MODEL_DEPLOYMENT_NAME")
+
+import os
+import logging
+
+def configure_logging():
+    # 1) Root: lascia WARNING così tagli la maggior parte degli INFO “automatici”
+    logging.basicConfig(
+        level=logging.WARNING,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+
+    # 2) Il TUO logger: lo alzi a INFO (o DEBUG) indipendentemente dal root
+    mylog = logging.getLogger("MYAGENT")
+    mylog.setLevel(logging.INFO)
+
+    # 3) Silenzia i logger più rumorosi (Azure SDK + exporter + HTTP logging)
+    noisy = {
+        "azure": logging.WARNING,  # tutto l'albero azure.*
+        "azure.core.pipeline.policies.http_logging_policy": logging.WARNING,
+        "azure.monitor.opentelemetry.exporter": logging.WARNING,
+        "azure.identity": logging.WARNING,
+        # se compare anche questo:
+        "opentelemetry": logging.WARNING,
+        # server/adapter:
+        "azure.ai.agentserver": logging.WARNING,  # puoi tenerlo INFO se ti serve
+    }
+    for name, lvl in noisy.items():
+        logging.getLogger(name).setLevel(lvl)
+
+    # 4) (Opzionale) Se i log di accesso HTTP ti infastidiscono:
+    # spesso arrivano da uvicorn / gunicorn (dipende da come l'agent server gira)
+    logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
+    logging.getLogger("uvicorn.error").setLevel(logging.WARNING)
+
+    return mylog
+
+
+logger = configure_logging()
 
 class hostedagent03_echoagent(BaseAgent):
     """A simple custom agent that echoes user messages with a prefix.
@@ -135,5 +170,5 @@ def create_agent() -> hostedagent03_echoagent:
 
 
 if __name__ == "__main__":
-    log_required_env()
+    log_env_vars()
     from_agent_framework(create_agent()).run()
