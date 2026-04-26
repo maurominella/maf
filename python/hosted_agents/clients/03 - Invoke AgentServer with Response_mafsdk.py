@@ -6,6 +6,7 @@ import asyncio
 base_url = "http://localhost:8088"
 api_key = "unexisting_openai_key"
 model = "unexisting_model_id"
+query = "Can you help me find available hotels in Seattle for a stay from April 25th to April 28th with a budget of $250 per night?" 
 
 openai_chat_client = OpenAIChatClient(
     base_url = base_url,
@@ -20,7 +21,7 @@ agent = Agent(
 )
 
 async def main():
-    response = await agent.run("Plan me a day trip")
-    print(f"Response: {response.messages[-1].contents[0].text}")
+    response = await agent.run(query)
+    print(f"Response: {response.messages[-1].contents[-1].text}")
 
 asyncio.run(main())
