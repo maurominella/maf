@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.Build.CentralPackageVersions">
+  <ItemGroup>
+    <!-- MAF runtime + provider Azure AI Foundry -->
+    <PackageReference Include="Microsoft.Agents.AI" Version="1.0.0-preview.251016.1" />
+    <PackageReference Include="Microsoft.Agents.AI.AzureAI" Version="1.0.0-preview.251016.1" />
+    <PackageReference Include="Microsoft.Agents.AI.Workflows" Version="1.0.0-preview.251016.1" />
+
+    <!-- Azure AI Foundry SDK (Persistent agents) -->
+    <PackageReference Include="Azure.AI.Agents.Persistent" Version="1.2.0-beta.6" />
+    <PackageReference Include="Azure.Identity" Version="1.17.0" />
+
+    <!-- MEAI (interfaces) + provider OpenAI -->
+    <PackageReference Include="Microsoft.Extensions.AI" Version="9.10.1" />
+    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="9.10.1-preview.1.25521.4" />
+
+    <!-- SDK OpenAI -->
+    <PackageReference Include="OpenAI" Version="2.5.0" />
+  </ItemGroup>
+</Project>

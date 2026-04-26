@@ -1,0 +1,11 @@
+[project]
+name = "ha02-azureopenaiagent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "agent-dev-cli>=0.0.1b260119",
+    "azure-ai-agentserver-agentframework==1.0.0b17",
+    "debugpy>=1.8.20",
+]
