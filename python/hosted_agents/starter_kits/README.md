@@ -6,7 +6,7 @@ azd init -t https://github.com/Azure-Samples/azd-ai-starter-basic
 ```
 
 ### During this step, specify the environment name (same as hosted agent name, for example)
-![alt text](./_README images/image-0.png)
+![alt text](./_README%20images/image-0.png)
 ```
 Loading template code to: /home/mauromi/git_repos/maf/python/hosted_agents/starter_kits/azd-ai-starter-basic
 
@@ -25,7 +25,7 @@ Change to the project directory:
 
 ## Add source code to the agent
 For example we may create the "agent" folder in the starter kit root, then add the following 4 files:<br/>
-![alt text](./_README images/image-2.png)
+![alt text](./_README%20images/image-2.png)
 
 ## Create/review the manifest (file `agent.yaml`)
 ```yaml
@@ -65,7 +65,7 @@ template:
 
 ## Complete the configuration in the local repo
 Run `azd ai agent init -m ./agent/agent.yaml`
-![alt text](./_README images/image-3.png)
+![alt text](./_README%20images/image-3.png)
 
 
 ## Check the updated `azure.yaml` ***manifest***
@@ -99,17 +99,17 @@ infra:
 
 ## Provision Azure Resources
 `azd provision`<br/>
-![alt text](./_README images/image-4.png)
+![alt text](./_README%20images/image-4.png)
 
 ## Deploy the image into ACR and the agent into Foundry Project
 `azd deploy ha01-echoagent`<br/>
-![alt text](./_README images/image-5.png)
+![alt text](./_README%20images/image-5.png)
 
 ### As a result, in the ACR we get
-![alt text](./_README images/image-6.png)
+![alt text](./_README%20images/image-6.png)
 
 ## Let's test it in the Azure portal we (with 0% `AI Quality`)
-![alt text](./_README images/image-7.png)
+![alt text](./_README%20images/image-7.png)
 
 
 ## Variables injection
