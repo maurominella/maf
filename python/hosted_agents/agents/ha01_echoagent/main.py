@@ -1,8 +1,22 @@
-import logging
 import os
-from typing import Any, AsyncGenerator
+import logging
+from dotenv import load_dotenv
+load_dotenv()  # MUST be first: env vars must be set before any import reads them
 
-from azure.monitor.opentelemetry import configure_azure_monitor
+# --- Azure Monitor setup ---------------------------------------------------
+# We call configure_azure_monitor() OURSELVES first (with default INFO+ logging)
+# because agent_framework also calls it internally during import — but at WARNING level,
+# which would prevent our logger.info() traces from reaching App Insights.
+# The double call causes OTel to emit two harmless startup warnings:
+#   "Overriding of current LoggerProvider is not allowed"
+#   "Overriding of current TracerProvider is not allowed"
+# These are cosmetic only: they fire once at startup, do not affect runtime behaviour,
+# and are not worth working around with extra complexity.
+if os.environ.get("APPLICATIONINSIGHTS_CONNECTION_STRING"):
+    from azure.monitor.opentelemetry import configure_azure_monitor
+    configure_azure_monitor(logging_level=logging.INFO)  # capture INFO+ in App Insights (default is WARNING)
+
+from typing import Any, AsyncGenerator
 
 from agent_framework import (
     AgentResponse,
@@ -16,7 +30,7 @@ from agent_framework import (
     normalize_messages,
 )
 from azure.ai.agentserver.agentframework import from_agent_framework
-
+# --------------------------------------------------------------------------
 
 # Configure logging - WARNING for everything else, while INFO for this module only
 logging.basicConfig(level=logging.WARNING) # this is the "father" logger, set to WARNING to avoid too much noise from other modules
@@ -28,14 +42,8 @@ if not logger.handlers: # avoid adding multiple handlers if this code is reloade
     logger.addHandler(_handler)
     logger.propagate = True # (default) so logs also reach the root logger
 
-# Configure Azure Monitor if connection string is available (injected by Foundry when App Insights is connected)
-if os.environ.get("APPLICATIONINSIGHTS_CONNECTION_STRING"): # see README.md to set this variable 
-    # attaches the App Insights handler, but since the logging level is not set, it uses the only for the parent logger configuration (WARNING), 
-    # which means that only WARNING and above logs will be sent to Azure Monitor. 
-    # The child logger for this module is set to INFO so it will log INFO and above to the console, 
-    # but only WARNING and above will be sent to Azure Monitor.
-    logger.info("Azure Monitor is configured and active. Connection string starts with: %s", os.environ.get("APPLICATIONINSIGHTS_CONNECTION_STRING")[:20])
-    configure_azure_monitor()
+if os.environ.get("APPLICATIONINSIGHTS_CONNECTION_STRING"):
+    logger.info("Azure Monitor is active.")
 else:
     logger.info("Azure Monitor is not configured. No connection string found in environment variables.")
 
@@ -99,14 +107,18 @@ class EchoAgent(BaseAgent):
         else:
             last_message = normalized[-1]
             if last_message.text:
+                logger.info("[INPUT] %s", last_message.text)
                 response_text = f"{self.echo_prefix}{last_message.text}"
             else:
                 response_text = f"{self.echo_prefix}[Non-text message received]"
 
+        logger.info("[OUTPUT] %s", response_text)
+
         # --- NON-STREAMING MODE ------------------------------------------------
         if not stream:
             async def _respond():
-                return AgentResponse(messages=[Message(role="assistant", text=response_text)])
+                ai = AgentResponse(messages=[Message(role="assistant", text=response_text)])
+                return ai
             return _respond()
 
         # --- STREAMING MODE ----------------------------------------------------

@@ -14,5 +14,5 @@ POST {{baseUrl}}/responses
 Content-Type: application/json
  
 {
-    "input": "Where is Sydney? What is the current time there?"
+    "input": "Where is Tokyo? What is the current time there?"
 }
