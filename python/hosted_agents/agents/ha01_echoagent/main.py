@@ -3,6 +3,7 @@ import os
 from typing import Any, AsyncGenerator
 
 from azure.monitor.opentelemetry import configure_azure_monitor
+
 from agent_framework import (
     AgentResponse,
     AgentResponseUpdate,
@@ -16,18 +17,8 @@ from agent_framework import (
 )
 from azure.ai.agentserver.agentframework import from_agent_framework
 
-# Variables injection
-"""
-Run the following commands from the azd project folder:
-```bash
-azd env set AIF_STD_PROJECT_ENDPOINT "https://foundry7159.services.ai.azure.com/api/projects/aif7159-standard-agent-project"
-azd env set MODEL_DEPLOYMENT_NAME "gpt-4o"
-azd env set APPLICATIONINSIGHTS_CONNECTION_STRING "InstrumentationKey=***;IngestionEndpoint=ht.."
-```
-"""
 
-
-# Configure logging - INFO for this module only, WARNING for everything else
+# Configure logging - WARNING for everything else, while INFO for this module only
 logging.basicConfig(level=logging.WARNING) # this is the "father" logger, set to WARNING to avoid too much noise from other modules
 logger = logging.getLogger(__name__) # this is the "child" logger for our module (this module)
 logger.setLevel(logging.INFO) # we set the child logger to INFO to get more detailed logs from our module
@@ -35,14 +26,20 @@ if not logger.handlers: # avoid adding multiple handlers if this code is reloade
     _handler = logging.StreamHandler()
     _handler.setLevel(logging.INFO)
     logger.addHandler(_handler)
-    # propagate=True (default) so logs also reach the root logger,
-    # where configure_azure_monitor() attaches the App Insights handler
+    logger.propagate = True # (default) so logs also reach the root logger
 
 # Configure Azure Monitor if connection string is available (injected by Foundry when App Insights is connected)
-if os.environ.get("APPLICATIONINSIGHTS_CONNECTION_STRING"):
+if os.environ.get("APPLICATIONINSIGHTS_CONNECTION_STRING"): # see README.md to set this variable 
+    # attaches the App Insights handler, but since the logging level is not set, it uses the only for the parent logger configuration (WARNING), 
+    # which means that only WARNING and above logs will be sent to Azure Monitor. 
+    # The child logger for this module is set to INFO so it will log INFO and above to the console, 
+    # but only WARNING and above will be sent to Azure Monitor.
+    logger.info("Azure Monitor is configured and active. Connection string starts with: %s", os.environ.get("APPLICATIONINSIGHTS_CONNECTION_STRING")[:20])
     configure_azure_monitor()
+else:
+    logger.info("Azure Monitor is not configured. No connection string found in environment variables.")
 
-class hostedagent_echoagent(BaseAgent):
+class EchoAgent(BaseAgent):
     """A simple custom agent that echoes user messages with a prefix.
 
     This demonstrates how to create a fully custom agent by extending BaseAgent
@@ -57,7 +54,7 @@ class hostedagent_echoagent(BaseAgent):
         custom_member: str = "Echo: ",
         **kwargs: Any,
     ) -> None:
-        """Initialize the hostedagent_echoagent.
+        """Initialize the EchoAgent.
 
         Args:
             name: The name of the agent.
@@ -106,8 +103,14 @@ class hostedagent_echoagent(BaseAgent):
             else:
                 response_text = f"{self.echo_prefix}[Non-text message received]"
 
+        # --- NON-STREAMING MODE ------------------------------------------------
+        if not stream:
+            async def _respond():
+                return AgentResponse(messages=[Message(role="assistant", text=response_text)])
+            return _respond()
+
         # --- STREAMING MODE ----------------------------------------------------
-        if stream:
+        elif stream:
             async def generator():
                 words = response_text.split()
                 for i, word in enumerate(words):
@@ -119,15 +122,10 @@ class hostedagent_echoagent(BaseAgent):
 
             # Return a valid async generator for streaming mode
             return ResponseStream(generator(), finalizer=AgentResponse.from_updates) # return generator()
+            
 
-        # --- NON-STREAMING MODE ------------------------------------------------
-        async def _respond():
-            return AgentResponse(messages=[Message(role="assistant", text=response_text)])
-        return _respond()
-    
-
-def create_agent() -> hostedagent_echoagent:
-    agent = hostedagent_echoagent(
+def create_agent() -> EchoAgent:
+    agent = EchoAgent(
         name="mauromi_agent_echo",
         description="A simple agent that echoes user messages",
         custom_member="🔊 Echo: ",
@@ -135,5 +133,5 @@ def create_agent() -> hostedagent_echoagent:
     return agent
 
 if __name__ == "__main__":
-    echo_agent = create_agent()
-    from_agent_framework(echo_agent).run()
+    MyEchoAgent = create_agent()
+    from_agent_framework(MyEchoAgent).run()
