@@ -108,7 +108,7 @@ infra:
 ### As a result, in the ACR we get
 ![alt text](./_README%20images/image-6.png)
 
-## Let's test it in the Azure portal we (with 0% `AI Quality`)
+## Let's test it in the Azure portal (with 0% `AI Quality`)
 ![alt text](./_README%20images/image-7.png)
 
 
