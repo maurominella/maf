@@ -4,8 +4,25 @@ Uses Microsoft Agent Framework with Azure AI Foundry.
 Ready for deployment to Foundry Hosted Agent service.
 """
 
-import asyncio
 import os
+import logging
+from dotenv import load_dotenv
+load_dotenv()  # MUST be first: env vars must be set before any import reads them
+
+# --- Azure Monitor setup ---------------------------------------------------
+# We call configure_azure_monitor() OURSELVES first (with default INFO+ logging)
+# because agent_framework also calls it internally during import — but at WARNING level,
+# which would prevent our logger.info() traces from reaching App Insights.
+# The double call causes OTel to emit two harmless startup warnings:
+#   "Overriding of current LoggerProvider is not allowed"
+#   "Overriding of current TracerProvider is not allowed"
+# These are cosmetic only: they fire once at startup, do not affect runtime behaviour,
+# and are not worth working around with extra complexity.
+if os.environ.get("APPLICATIONINSIGHTS_CONNECTION_STRING"):
+    from azure.monitor.opentelemetry import configure_azure_monitor
+    configure_azure_monitor(logging_level=logging.INFO)  # capture INFO+ in App Insights (default is WARNING)
+
+import asyncio
 from datetime import datetime
 from typing import Annotated
 
@@ -17,6 +34,19 @@ from agent_framework import Agent
 from agent_framework.azure import AzureAIAgentClient
 from azure.ai.agentserver.agentframework import from_agent_framework
 from azure.identity.aio import DefaultAzureCredential
+
+# --------------------------------------------------------------------------
+# Configure logging - WARNING for everything else, while INFO for this module only
+logging.basicConfig(level=logging.WARNING) # this is the "father" logger, set to WARNING to avoid too much noise from other modules
+logger = logging.getLogger(__name__) # this is the "child" logger for our module (this module)
+logger.setLevel(logging.INFO) # we set the child logger to INFO to get more detailed logs from our module
+if not logger.handlers: # avoid adding multiple handlers if this code is reloaded multiple times (e.g. during development)
+    _handler = logging.StreamHandler()
+    _handler.setLevel(logging.INFO)
+    logger.addHandler(_handler)
+    logger.propagate = True # (default) so logs also reach the root logger
+
+# --------------------------------------------------------------------------
 
 # Configure these for your Foundry project
 # Read the explicit variables present in the .env file
@@ -144,6 +174,21 @@ politely let them know you specialize in Seattle hotel recommendations.""",
 
         print("Seattle Hotel Agent Server running on http://localhost:8088")
         server = from_agent_framework(agent)
+
+        # PRIVACY WORKAROUND: the hosted agent framework hardcodes enable_sensitive_data=True
+        # inside _configure_otel_providers(), ignoring the ENABLE_SENSITIVE_DATA env var that
+        # agent_framework already documents and supports. This override restores the correct
+        # behaviour: read ENABLE_SENSITIVE_DATA from the environment (default: false) so that
+        # capturing LLM message content (prompts, completions) in App Insights is opt-in.
+        # TODO: remove this once the framework reads ENABLE_SENSITIVE_DATA itself.
+        def _configure_otel_providers_override(exporters):  # type: ignore[no-untyped-def]
+            from agent_framework.observability import configure_otel_providers
+            enable_sensitive_data = os.getenv("ENABLE_SENSITIVE_DATA", "false").lower() == "true"
+            configure_otel_providers(enable_sensitive_data=enable_sensitive_data, exporters=exporters)
+            return True
+
+        server._configure_otel_providers = _configure_otel_providers_override  # type: ignore[attr-defined]
+
         await server.run_async()
 
 

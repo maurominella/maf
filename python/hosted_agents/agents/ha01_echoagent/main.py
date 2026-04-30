@@ -42,6 +42,8 @@ if not logger.handlers: # avoid adding multiple handlers if this code is reloade
     logger.addHandler(_handler)
     logger.propagate = True # (default) so logs also reach the root logger
 
+# --------------------------------------------------------------------------
+
 if os.environ.get("APPLICATIONINSIGHTS_CONNECTION_STRING"):
     logger.info("Azure Monitor is active.")
 else:
