@@ -6,7 +6,7 @@ import asyncio
 base_url = "http://localhost:8088"
 api_key = "unexisting_openai_key"
 model = "unexisting_model_id"
-query = "Can you help me find available hotels in Seattle for a stay from April 25th to April 28th with a budget of $250 per night?" 
+query = "Can you help me find available hotels in Seattle for a stay from April 25th to April 28th with a budget of $200 per night?" 
 
 openai_chat_client = OpenAIChatClient(
     base_url = base_url,

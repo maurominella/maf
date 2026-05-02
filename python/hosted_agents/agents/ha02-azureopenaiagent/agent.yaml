@@ -9,6 +9,7 @@ description: >
 metadata:
   authors:
     - Microsoft
+    - Mauro Minella
   tags:
     - Azure AI AgentServer
     - Microsoft Agent Framework

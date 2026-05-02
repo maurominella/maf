@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/AgentSchema/refs/heads/main/schemas/v1.0/ContainerAgent.yaml
 
 kind: hosted
-name: ha01-echoagent
+name: ha02-azureopenaiagent
 description: |
     This sample demonstrates how to create a custom AI agent answer a simple question.   It is useful for testing, debugging, and learning how to build custom agents.
 metadata:

@@ -64,7 +64,7 @@ template:
 `azd auth login`
 
 ## Complete the configuration in the local repo
-Run `azd ai agent init -m ./agent/agent.yaml`
+Run `azd ai agent init -m ./agents/ha01-echoagent/agent.yaml`
 ![alt text](./_README%20images/image-3.png)
 
 

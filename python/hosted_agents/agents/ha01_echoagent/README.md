@@ -28,6 +28,12 @@ EOF
 ```
 # Docker tests locally
 ```
+# remove all Docker containers (including the running ones)
+docker rm -f $(docker ps -aq)
+
+# remove all Docker images (including the running ones)
+docker rmi -f $(docker images -aq)
+
 # build the image
 docker build -t echoagent .
 
