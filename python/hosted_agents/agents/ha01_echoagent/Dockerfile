@@ -2,16 +2,14 @@ FROM python:3.13-slim
 
 WORKDIR /app
 
-# If you want to copy the entire ha01_echoagent directory, you can use "." instead of listing each file individually
-COPY main.py requirements.txt .env ha01_echoagent/
+# Copy all source files; secrets (.env) are excluded via .dockerignore
+COPY ./ .
 
-WORKDIR /app/ha01_echoagent
+# Install dependencies
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Install agentserver packages first (they pull in older agent-framework versions that are compatible with agentserver)
-# then upgrade agent-framework-* to the required rc versions
-RUN pip install --no-cache-dir -r requirements.txt
-
-# This is actually not needed
+# Port is informational only; Foundry routes traffic internally
 EXPOSE 8088
 
 CMD ["python", "main.py"]

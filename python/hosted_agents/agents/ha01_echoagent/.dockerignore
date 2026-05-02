@@ -1,0 +1,70 @@
+# Virtual environments
+.venv/
+venv/
+env/
+.python-version
+
+# Environment files with secrets — NEVER bake into the image
+.env
+.env.*
+*.local
+
+# Python build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Testing
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+
+# IDE and OS files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Foundry config
+.foundry/
+build-source-*/
+
+# Git
+.git/
+.gitignore
+
+# Docker
+.dockerignore
+
+# Documentation and images
+_README images/
+*.md
+!README.md
+LICENSE
+
+# uv lock file (dependencies are installed via pip in the container)
+uv.lock
+pyproject.toml
