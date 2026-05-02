@@ -1,0 +1,50 @@
+# Virtual environments
+.venv/
+venv/
+env/
+.python-version
+
+# Environment files with secrets — inject at runtime via --env-file or -e
+.env
+.env.*
+*.local
+!.env.example
+
+# Python build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Testing / tooling
+.tox/
+.nox/
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+
+# IDE and OS files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# Git
+.git/
+.gitignore
+
+# Docker
+.dockerignore
+
+# uv lockfile and pyproject are not needed in the image
+uv.lock
+pyproject.toml
+
+# README images
+"_README images"/

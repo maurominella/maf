@@ -1,28 +1,55 @@
-# **CLIENTS** for hosted_agents
-Microsoft Foundry Hosted Agents
+# Clients for Microsoft Foundry Hosted Agents
 
-## UV Installation  (just for testing)
-- On Linux / macOS: `curl -LsSf https://astral.sh/uv/install.sh | sh`
-- On Windows: `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+> **Part of the [Microsoft Foundry Hosted Agents](../README.md) collection.**
 
-## Setup Steps
-- **CD** into the folder
-- Create the environment: `uv init . --python 3.13`
-- Create the local virtual environment: `uv venv`
-- Activate the environment:
-  - On Linux/macOS: `source .venv/bin/activate`
-  - On Windows: `.\.venv\Scripts\activate.ps1`
-- Add libraries (it's KEY to use `--active`):
-  - Automatically: `uv add --active $(cat requirements.txt) --prerelease=allow`
-  - Manually: `uv add --active <package-name> --prerelease=allow`
-- Check that the packges are installed: `uv pip list`
-- Synchronize to create the file structure: `uv sync --active --prerelease=allow`
-- To deactivate: `deactivate`
-- Create kernel for the jupyter notebook: ```python -m ipykernel install --name maf --use```
-- Test Python:
+This folder contains sample client code that demonstrates how to invoke a **Microsoft Foundry Hosted Agent** from a Python script or an HTTP client.
+
+## Files
+
+| File | Description |
+|------|-------------|
+| `01 - echo_agent.http` | REST Client (VS Code) calls to the local echo agent |
+| `02 - Invoke AgentServer with Response_openaisdk.py` | Invoke an AgentServer endpoint using the OpenAI SDK |
+| `03 - Invoke AgentServer with Response_mafsdk.py` | Invoke an AgentServer endpoint using the Microsoft Agent Framework SDK |
+| `04 - Invoke HostedAgent_responses.py` | Invoke a Foundry-hosted agent via the Responses protocol |
+| `main.py` | Minimal entry point for quick testing |
+
+## Setup
+
+### 1. Create and activate a virtual environment
+
+```bash
+python -m venv .venv
+source .venv/bin/activate          # Linux / macOS
+.\.venv\Scripts\Activate.ps1       # Windows PowerShell
 ```
-python - << 'EOF'
-import agent_framework
-print("OK:", agent_framework)
-EOF
+
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
 ```
+
+### 3. Configure environment variables
+
+Set the agent endpoint before running the client scripts:
+
+```bash
+# Linux / macOS
+export AGENT_ENDPOINT="http://localhost:8088"   # local agent
+# or
+export AGENT_ENDPOINT="https://<foundry-account>.services.ai.azure.com/api/projects/<project>/..."  # hosted agent
+```
+
+```powershell
+# Windows PowerShell
+$env:AGENT_ENDPOINT = "http://localhost:8088"
+```
+
+## Running a client script
+
+```bash
+python "04 - Invoke HostedAgent_responses.py"
+```
+
+> Make sure the target agent is running (locally or deployed in a Microsoft Foundry project) before executing the client.

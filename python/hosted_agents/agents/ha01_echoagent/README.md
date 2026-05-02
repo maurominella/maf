@@ -1,45 +1,72 @@
-# hosted_agents
-Microsoft Foundry Hosted Agents
+# ha01_echoagent — Microsoft Foundry Hosted Agent (Echo Agent)
 
-## UV Installation  (just for testing)
-- On Linux / macOS: `curl -LsSf https://astral.sh/uv/install.sh | sh`
-- On Windows: `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+> **Part of the [Microsoft Foundry Hosted Agents](../../README.md) collection.**
+> See the top-level README for prerequisites, local-run instructions, containerization, ACR push, and deployment steps.
 
-## Setup Steps
-- **CD** into the folder
-- Create the environment: `uv init . --python 3.13`
-- Create the local virtual environment: `uv venv`
-- Activate the environment:
-  - On Linux/macOS: `source .venv/bin/activate`
-  - On Windows: `.\.venv\Scripts\activate.ps1`
-- Add libraries (it's KEY to use `--active`):
-  - Automatically: `uv add --active $(cat requirements.txt) --prerelease=allow`
-  - Manually: `uv add --active <package-name> --prerelease=allow`
-- Check that the packges are installed: `uv pip list`
-- Synchronize to create the file structure: `uv sync --active --prerelease=allow`
-- To deactivate: `deactivate`
-- Create kernel for the jupyter notebook: ```python -m ipykernel install --name maf --use```
-- Test Python:
+This is the simplest hosted-agent sample. It echoes back the user's input without calling any LLM, making it ideal for testing the **Microsoft Agent Framework** hosting infrastructure end-to-end.
+
+## Quick Start
+
+```bash
+# 1. Create and activate a virtual environment
+python -m venv .venv
+source .venv/bin/activate          # Linux / macOS
+.\.venv\Scripts\Activate.ps1       # Windows PowerShell
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Configure environment variables
+cp .env.example .env               # then edit .env with your values
+
+# 4. Run the agent locally
+python main.py
+# Agent is now available at http://localhost:8088
 ```
-python - << 'EOF'
-import agent_framework
-print("OK:", agent_framework)
-EOF
-```
-# Docker tests locally
-```
-# remove all Docker containers (including the running ones)
-docker rm -f $(docker ps -aq)
 
-# remove all Docker images (including the running ones)
-docker rmi -f $(docker images -aq)
-
-# build the image
-docker build -t echoagent .
-
-# run the container, mapping external 8089 to internal 8088
-docker run -p 8089:8088 ha01_echoagent
+**Test it:**
+```bash
+curl -sS -X POST http://localhost:8088/responses \
+  -H "Content-Type: application/json" \
+  -d '{"input": "Hello!", "stream": false}'
 ```
+
+## Local Container Build & Test
+
+```bash
+# Build the image
+docker build -t ha01-echoagent:latest .
+
+# Run the container (mapping host port 8089 → container port 8088)
+docker run --rm -p 8089:8088 --env-file .env ha01-echoagent:latest
+```
+
+> To push the image to ACR and deploy to a Foundry project, see
+> [Build, Push & Deploy](../../README.md#push-to-azure-container-registry-acr) in the top-level README,
+> or use the helper scripts in [`../../scripts/`](../../scripts/).
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and fill in your values:
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `AIF_STD_PROJECT_ENDPOINT` | Yes | Microsoft Foundry project endpoint URL |
+| `MODEL_DEPLOYMENT_NAME` | Yes | Chat model deployment name (e.g. `gpt-4o`) |
+| `APPLICATIONINSIGHTS_CONNECTION_STRING` | No | Enable distributed tracing via Application Insights |
+| `AZURE_EXPERIMENTAL_ENABLE_GENAI_TRACING` | No | Set to `true` to enable GenAI tracing |
+
+> **Never commit `.env`** — it is listed in `.gitignore`.
+
+## Files
+
+| File | Description |
+|------|-------------|
+| `main.py` | Agent entry point; starts the HTTP server on port 8088 |
+| `Dockerfile` | Container image definition |
+| `requirements.txt` | Python dependencies |
+| `.env.example` | Environment variable template |
+| `agent.yaml` | Microsoft Foundry agent manifest |
 
 # Logging
 Logging is activated with the following lines of code:
