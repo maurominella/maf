@@ -10,7 +10,7 @@ Please refer to the README.md files in each subfolder.
 - On Windows: `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
 
 ### Setup Steps
-```bash
+```python
 # 1. **MKDIR** the new folder and and **CD** into it
 
 # 2 Create the environment
