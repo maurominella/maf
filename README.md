@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/2cecf088-a636-47c3-92b5-15a8726f7f43" alt="Manageritalia logo">
+</p>
+
 # maf
 Microsoft Agent Framework Experiments.
 Please refer to the README.md files in each subfolder.
