@@ -13,9 +13,9 @@ This is the simplest hosted-agent sample. It echoes back the user's input withou
 
 ### Setup Steps
 ```bash
-# - 1. **MKDIR** the new folder and and **CD** into it
+# 1. **MKDIR** the new folder and and **CD** into it
 
-# .2 Create the environment
+# 2 Create the environment
 uv init . --python 3.13
 
 # 3. Create the local virtual environment
