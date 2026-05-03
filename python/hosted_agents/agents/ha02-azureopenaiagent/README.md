@@ -160,6 +160,18 @@ curl -sS -H "Content-Type: application/json" -X POST http://localhost:8088/respo
 
 The agent will use the `get_available_hotels` tool to search for available hotels matching your criteria.
 
+
+## Local Container Build & Test
+The .dockerignore intentionally excludes .env from the build context (so it never reaches Docker). This is correct security behaviour: you should never bake secrets into an image.
+So, don't use .env from the COPY instruction, but pass the .env at runtime instead:
+```bash
+# Build the image
+docker build -t ha01-echoagent:latest .
+
+# Run the container (mapping host port 8089 → container port 8088)
+docker run --rm -p 8089:8088 --env-file .env ha02-azureopenaiagent:latest
+```
+
 ## Deploying the Agent to Microsoft Foundry
 
 To deploy the hosted agent:
