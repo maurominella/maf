@@ -6,6 +6,7 @@ azd init -t https://github.com/Azure-Samples/azd-ai-starter-basic
 ```
 
 ### During this step, specify the environment name (same as Microsoft Foundry Project name, for example)
+![alt text](image.png)
 ![alt text](./_README%20images/image-0.png)
 ```
 Loading template code to: /home/mauromi/git_repos/maf/python/hosted_agents/starter_kits/azd-ai-starter-basic
