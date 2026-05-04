@@ -27,7 +27,7 @@ from azure.ai.projects import AIProjectClient
 from azure.ai.projects.models import VersionRefIndicator
 
 endpoint = os.environ.get("FOUNDRY_PROJECT_ENDPOINT", "https://foundry7159.services.ai.azure.com/api/projects/aif7159-standard-agent-project")
-agent_name = "ha01-echoagent"
+agent_name = "ha02-azureopenaiagent" # "ha01-echoagent", "ha02-azureopenaiagent"
 isolation_key = "my-isolation-key"
 
 with (
@@ -56,7 +56,7 @@ with (
 
     # --- NON-STREAMING ---
     response = openai_client.responses.create(
-        input="Hello, what can you help me with?",
+        input="Can you help me find available hotels in Seattle for a stay from April 25th to April 28th with a budget of $180 per night?",
         extra_body={
             "agent_session_id": session.agent_session_id,
         },
@@ -66,7 +66,7 @@ with (
     # --- STREAMING ---
     with openai_client.responses.stream(
         model="gpt-4o-UNEXSISTING-MODEL",  # model is required for streaming, but will be ignored by the agent endpoint
-        input="Tell me something interesting.",
+        input="Can you help me find available hotels in Seattle for a stay from April 25th to April 28th with a budget of $250 per night?",
         extra_body={
             "agent_session_id": session.agent_session_id,
         },

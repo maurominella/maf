@@ -119,27 +119,29 @@ Before running this sample, ensure you have:
 
 ### Environment Variables
 
-Set the following environment variables:
+Copy `.env.example` to `.env` and fill in your values:
 
-- `PROJECT_ENDPOINT` - Your Microsoft Foundry project endpoint URL (required)
-- `MODEL_DEPLOYMENT_NAME` - The deployment name for your chat model (defaults to `gpt-4.1-mini`)
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `PROJECT_ENDPOINT` | No | Microsoft Foundry project endpoint URL |
+| `MODEL_DEPLOYMENT_NAME` | No | Chat model deployment name (e.g. `gpt-4o`) |
+| `APPLICATIONINSIGHTS_CONNECTION_STRING` | No | Enable distributed tracing via Application Insights |
+| `AZURE_EXPERIMENTAL_ENABLE_GENAI_TRACING` | No | Set to `true` to enable GenAI tracing |
+| `ENABLE_SENSITIVE_DATA` | No | Set to `true` to enable sensitive tracing, like conversations |
 
-This sample loads environment variables from a local `.env` file if present.
-
-Create a `.env` file in this directory with the following content:
-
-```
-PROJECT_ENDPOINT=https://<your-resource>.services.ai.azure.com/api/projects/<your-project>
-MODEL_DEPLOYMENT_NAME=gpt-4.1-mini
-```
-
-Or set them via PowerShell:
+, orr set them via PowerShell:
 
 ```powershell
 # Replace with your actual values
 $env:PROJECT_ENDPOINT="https://<your-resource>.services.ai.azure.com/api/projects/<your-project>"
 $env:MODEL_DEPLOYMENT_NAME="gpt-4.1-mini"
+$env:AZURE_TENANT_ID=""
+$env:AZURE_CLIENT_ID=""
+$env:AZURE_CLIENT_SECRET=""
 ```
+
+
+> **Never commit `.env`** — it is listed in `.gitignore`.
 
 ### Setting Up a Virtual Environment
 
@@ -223,10 +225,34 @@ The .dockerignore intentionally excludes .env from the build context (so it neve
 So, don't use .env from the COPY instruction, but pass the .env at runtime instead:
 ```bash
 # Build the image
-docker build -t ha01-echoagent:latest .
+docker build -t ha02-azureopenaitagent .
 
-# Run the container (mapping host port 8089 → container port 8088)
-docker run --rm -p 8089:8088 --env-file .env ha02-azureopenaiagent:latest
+# Run the container (mapping host port 8090 → container port 8088)
+docker run -p 8090:8088 --env-file .env ha02-azureopenaitagent
+
+# or
+docker run -p 8090:8088 \
+  -e AZURE_TENANT_ID=<your-tenant-id> \
+  -e AZURE_CLIENT_ID=<your-client-id> \
+  -e AZURE_CLIENT_SECRET=<your-client-secret> \
+  --env-file .env \
+  ha02-azureopenaitagent:latest
+
+# or, since they're already defined in your .env file, pass them without values to inherit from the current shell environment:
+docker run -p 8090:8088 \
+  -e AZURE_TENANT_ID \
+  -e AZURE_CLIENT_ID \
+  -e AZURE_CLIENT_SECRET \
+  --env-file .env \
+  ha02-azureopenaitagent:latest
+
+
+# such variables might be defined in our shell's startup file.
+# For bash, append to ~/.bashrc (interactive shells) or ~/.bash_profile (login shells):
+echo 'export AZURE_TENANT_ID=3ad***' >> ~/.bashrc
+echo 'export AZURE_CLIENT_ID=31***' >> ~/.bashrc
+echo 'export AZURE_CLIENT_SECRET=F5***' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 ## Deploying the Agent to Microsoft Foundry

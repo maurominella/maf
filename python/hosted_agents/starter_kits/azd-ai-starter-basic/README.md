@@ -64,7 +64,7 @@ template:
 `azd auth login`
 
 ## Complete the configuration in the local repo
-Run `azd ai agent init -m ./agents/ha01-echoagent/agent.yaml`
+Run `azd ai agent init -m ./agents/ha01-echoagent/agent.yaml`<br/>
 ![alt text](./_README%20images/image-3.png)
 
 
@@ -98,6 +98,7 @@ infra:
 ```
 
 ## Provision Azure Resources
+**IMPORTANT**: this provisioning phase will consider ***ALL*** services listed under *services* key in azure.yaml. This means that if there are more than one hosted agent defined there, it will need to find it under the *src/* folder.<br/><br/>
 `azd provision`<br/>
 ![alt text](./_README%20images/image-4.png)
 

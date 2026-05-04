@@ -2,7 +2,7 @@ FROM python:3.13-slim
 
 WORKDIR /app
 
-COPY main.py agent.yaml requirements.txt ./
+COPY main.py agent.yaml requirements.txt .env ./
 
 RUN pip install --no-cache-dir --upgrade pip && \
     if [ -f requirements.txt ]; then \

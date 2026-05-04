@@ -1,18 +1,21 @@
-# Unique identifier/name for this agent
 name: ha02-azureopenaiagent
 
 # Brief description of what this agent does
 description: >
-  This sample demonstrates how to create a custom AI agent answer a simple question.  
-  It is useful for testing, debugging, and learning how to build custom agents.
+  A travel assistant agent that helps users find hotels in Seattle.
+  Demonstrates local Python tool execution - a key advantage of code-based 
+  hosted agents over prompt agents.
 
 metadata:
-  # Categorization tags for organizing and discovering agents
+  authors:
+    - Microsoft
+    - Mauro Minella
   tags:
-    - AI Agent Hosting
     - Azure AI AgentServer
-    - Custom Agent Implementation
     - Microsoft Agent Framework
+    - Local Tools
+    - Travel Assistant
+    - Hotel Search
 
 template:
   name: ha02-azureopenaiagent

@@ -1,25 +1,21 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/AgentSchema/refs/heads/main/schemas/v1.0/ContainerAgent.yaml
 
 kind: hosted
-name: ha02-azureopenaiagent
+name: ha01-echoagent
 description: |
-    A travel assistant agent that helps users find hotels in Seattle. Demonstrates local Python tool execution - a key advantage of code-based  hosted agents over prompt agents.
+    This sample demonstrates how to create a custom AI agent answer a simple question.   It is useful for testing, debugging, and learning how to build custom agents.
 metadata:
-    authors:
-        - Microsoft
-        - Mauro Minella
     tags:
+        - AI Agent Hosting
         - Azure AI AgentServer
+        - Custom Agent Implementation
         - Microsoft Agent Framework
-        - Local Tools
-        - Travel Assistant
-        - Hotel Search
 protocols:
     - protocol: responses
       version: v1
 resources:
-    cpu: "1"
-    memory: 2Gi
+    cpu: "0.5"
+    memory: 1Gi
 environment_variables:
     - name: AIF_STD_PROJECT_ENDPOINT
       value: ${AIF_STD_PROJECT_ENDPOINT}

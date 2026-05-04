@@ -66,10 +66,10 @@ EOF
 
 ```bash
 # Build the image
-docker build -t ha01-echoagent:latest .
+docker build -t ha01-echoagent .
 
 # Run the container (mapping host port 8089 → container port 8088)
-docker run --rm -p 8089:8088 --env-file .env ha01-echoagent:latest
+docker run --rm -p 8089:8088 --env-file .env ha01-echoagent
 ```
 
 > To push the image to ACR and deploy to a Foundry project, see
@@ -82,10 +82,23 @@ Copy `.env.example` to `.env` and fill in your values:
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `AIF_STD_PROJECT_ENDPOINT` | Yes | Microsoft Foundry project endpoint URL |
-| `MODEL_DEPLOYMENT_NAME` | Yes | Chat model deployment name (e.g. `gpt-4o`) |
+| `PROJECT_ENDPOINT` | No | Microsoft Foundry project endpoint URL |
+| `MODEL_DEPLOYMENT_NAME` | No | Chat model deployment name (e.g. `gpt-4o`) |
 | `APPLICATIONINSIGHTS_CONNECTION_STRING` | No | Enable distributed tracing via Application Insights |
 | `AZURE_EXPERIMENTAL_ENABLE_GENAI_TRACING` | No | Set to `true` to enable GenAI tracing |
+| `ENABLE_SENSITIVE_DATA` | No | Set to `true` to enable sensitive tracing, like conversations |
+
+, orr set them via PowerShell:
+
+```powershell
+# Replace with your actual values
+$env:PROJECT_ENDPOINT="https://<your-resource>.services.ai.azure.com/api/projects/<your-project>"
+$env:MODEL_DEPLOYMENT_NAME="gpt-4.1-mini"
+$env:AZURE_TENANT_ID=""
+$env:AZURE_CLIENT_ID=""
+$env:AZURE_CLIENT_SECRET=""
+```
+
 
 > **Never commit `.env`** — it is listed in `.gitignore`.
 
